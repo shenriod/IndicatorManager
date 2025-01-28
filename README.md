@@ -11,7 +11,7 @@
 
 ## Demo 
 
-A demo version is available under https://www.henriod.info
+A demo version is available under https://www.henriod.info/dsc
 
 ---
 

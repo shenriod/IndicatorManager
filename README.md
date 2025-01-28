@@ -2,6 +2,8 @@
 
 **Indicator Manager** is a **prototype** designed to demonstrate how a harmonized catalog of indicators could function. It allows users to organize, explore, and manage indicators grouped by sectors, themes, and SDGs, offering an interactive and user-friendly experience. While fully functional, **this prototype was built for demonstration purposes and is not intended for production use**.
 
+---
+
 ![image](https://github.com/user-attachments/assets/885b1e10-4cd3-49cd-ac7c-a2c05b64cb9b)
 
 

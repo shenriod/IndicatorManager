@@ -64,7 +64,7 @@ To explore the prototype locally, follow these steps:
 
 ## File Structure
 
-- `/api/`: Backend PHP scripts for retrieving and updating indicators.
+- `/api/`: Backend PHP scripts for retrieving indicators.
 - `/db/`: SQLite database and schema.
 - `/index.html`: Main page for viewing and filtering indicators.
 

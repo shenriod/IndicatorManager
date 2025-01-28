@@ -5,6 +5,7 @@
 ![image](https://github.com/user-attachments/assets/96361a53-8d43-433b-a3c8-aa03ec162735)
 
 
+A demo version is available under https://www.henriod.info
 ---
 
 ## Purpose

@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Harmonized Indicators Catalog</title>
+  <style>
+    h1 {
+      font-size: 1.8em;
+      color: #ffffff;
+      background-color: #007BFF; /* Blue background */
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    h1:hover {
+      background-color: #0056b3; /* Darker blue on hover */
+    }
+
+    h2 {
+      font-size: 1.5em;
+      color: #ffffff;
+      background-color: #6c757d; /* Gray background */
+      padding: 8px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-left: 40px;
+    }
+    h2:hover {
+      background-color: #5a6268; /* Darker gray on hover */
+    }
+    h3 {
+      font-size: 1.4em; /* Increase font size for prominence */
+      background-color: #80aaff;
+      text-align: center;
+      font-weight: bold; /* Make the title bold */
+      color: #333; /* Use a darker color for better visibility */
+      margin-bottom: 20px; /* Add some spacing below the title */
+    }
+    h3:hover {
+      background-color: #1a66ff; /* Add a hover effect to draw attention */
+    }
+    #page-title {
+      font-size: 2em;
+      font-weight: bold;
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 2px solid #007BFF;
+      padding-bottom: 10px;
+    }
+    .indicator {
+      margin-left: 60px; /* Indent indicators under themes */
+    }
+    .toggle-icon {
+      font-size: 1.2em;
+      margin-left: 10px;
+    }
+    .concept, .package {
+      font-size: 0.9em;
+      color: #555;
+      cursor: help;
+    }
+    .sdg {
+      font-size: 0.9em;
+      color: #555;
+      cursor: help;
+    }
+
+    .sdg:hover {
+      text-decoration: underline;
+    }
+
+    .filter-icon {
+      font-size: 0.8em;
+      color: #007BFF;
+      margin-left: 5px;
+      cursor: pointer;
+    }
+
+    .filter-icon:hover {
+      color: #0056b3;
+      text-decoration: underline;
+    }
+    .filter-icon {
+      font-size: 0.8em;
+      color: #007BFF;
+      margin-left: 5px;
+      cursor: pointer;
+    }
+    .filter-icon:hover {
+      color: #0056b3;
+      text-decoration: underline;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      padding-bottom: 80px; /* Reserve space for the footer */
+    }
+    .indicator {
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+      padding: 10px;
+      transition: background-color 0.3s;
+    }
+    .indicator:hover {
+      cursor: pointer;
+    }
+    .indicator.selected {
+      background-color: #d3f4ff; /* Light blue for selected indicators */
+    }
+    #search {
+      margin-bottom: 20px;
+      padding: 10px;
+      width: 100%;
+      font-size: 16px;
+    }
+    #selectedIndicators {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: #f9f9f9;
+      border-top: 1px solid #ccc;
+      padding: 10px 20px;
+      box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+      font-size: 0.9em;
+    }
+    #selectedIndicators h2 {
+      margin: 0;
+      font-size: 1em;
+      font-weight: bold;
+    }
+    #selectedIndicators ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 5px 0 0 0;
+    }
+    #selectedIndicators li {
+      margin: 5px 0;
+    }
+    #reset-filter {
+      background-color: #f44336;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #reset-filter:hover {
+      background-color: #d32f2f;
+    }
+    #selectedIndicators div:last-child {
+      display: flex;
+      gap: 10px; /* Space between buttons */
+    }
+
+    #deselect-button {
+      background-color: #f44336;
+    }
+
+    #deselect-button:hover {
+      background-color: #d32f2f;
+    }
+
+    #export-button {
+      background-color: #007BFF;
+    }
+
+    #export-button:hover {
+      background-color: #0056b3;
+    }
+    a {
+      font-size: 0.9em;
+      cursor: help;
+      color: #007BFF; /* Match the primary blue color */
+      text-decoration: none; /* Remove the underline for a cleaner look */
+    }
+
+    a:hover {
+      color: #0056b3; /* Darker blue on hover */
+      text-decoration: underline; /* Add underline on hover for clarity */
+    }
+
+    .link-icon {
+      font-size: 0.9em; /* Slightly smaller than the text */
+      margin-left: 5px; /* Add space between the domain and the icon */
+      color: #007BFF; /* Match the text color */
+    }
+
+    a:hover .link-icon {
+      color: #0056b3; /* Darker blue for the icon on hover */
+    }
+
+
+  </style>
+
+</head>
+<body>
+  <div id="page-title">Harmonized Indicators Catalog</div>
+  <input type="text" id="search" placeholder="Search indicators by name..." oninput="searchIndicators()" />
+  <div id="filter-result" style="margin-top: 10px; font-size: 1em; color: #555;"></div>
+  <button id="reset-filter" style="display: none; margin-top: 10px; padding: 10px; font-size: 1em;" onclick="resetFilter()">Reset Filter</button>
+
+  
+  <div id="indicators"></div>
+
+  <footer id="selectedIndicators" style="display: flex; justify-content: space-between; align-items: center; padding: 10px; box-sizing: border-box; max-width: 100%; overflow: hidden;">
+    <div>
+      <h2>Selected Indicators:</h2>
+      <ul id="selectedList">
+        <li>No indicators selected</li>
+      </ul>
+    </div>
+    <div style="display: flex; gap: 10px;"> <!-- Flex container for buttons -->
+      <button id="deselect-button" style="padding: 5px 10px; font-size: 0.9em; background-color: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer;" onclick="deselectAllIndicators()">Deselect All</button>
+      <button id="export-button" style="padding: 5px 10px; font-size: 0.9em; background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer;" onclick="exportSelectedIndicators()">Export</button>
+    </div>
+  </footer>
+
+  <script>
+    let allIndicators = []; // To store all fetched indicators
+    const selectedIndicators = new Map(); // To keep track of selected indicators (id -> name)
+
+    async function fetchIndicators(search = '') {
+      const response = await fetch(`api/get_indicators.php?search=${encodeURIComponent(search)}`);
+      const indicators = await response.json();
+      allIndicators = indicators; // Cache fetched indicators
+      displayIndicatorsByThemeAndSector(indicators);
+    }
+    
+    
+function displayIndicatorsByThemeAndSector(indicators, expandByDefault = false) {
+  const container = document.getElementById('indicators');
+  container.innerHTML = ''; // Clear container
+
+  const sectors = groupBySector(indicators);
+
+  Object.keys(sectors).forEach(sector => {
+    // Count total indicators for this sector
+    const sectorIndicatorCount = sectors[sector].reduce(
+      (count, theme) => count + theme.indicators.length, 0
+    );
+
+    const sectorDiv = document.createElement('div');
+    sectorDiv.classList.add('sector');
+    const sectorHeader = document.createElement('h1');
+    sectorHeader.innerHTML = `
+      ${sector} (${sectorIndicatorCount}) <span class="toggle-icon">${expandByDefault ? '▼' : '▶'}</span>
+    `;
+
+    const themeContainer = document.createElement('div'); // Container for themes
+    themeContainer.style.display = expandByDefault && sectorIndicatorCount > 0 ? 'block' : 'none';
+
+    sectors[sector].forEach(theme => {
+      // Count total indicators for this theme
+      const themeIndicatorCount = theme.indicators.length;
+
+      const themeDiv = document.createElement('div');
+      themeDiv.classList.add('theme');
+      const themeHeader = document.createElement('h2');
+      themeHeader.innerHTML = `
+        ${theme.theme_name} (${themeIndicatorCount}) <span class="toggle-icon">${expandByDefault ? '▼' : '▶'}</span>
+      `;
+
+      const indicatorContainer = document.createElement('div'); // Container for indicators
+      theme.indicators.forEach(indicator => {
+        const indicatorDiv = document.createElement('div');
+        indicatorDiv.classList.add('indicator');
+        indicatorDiv.dataset.id = indicator.indicator_id;
+        indicatorDiv.dataset.name = indicator.name;
+
+        // Add "selected" class if the indicator is in the selectedIndicators map
+        if (selectedIndicators.has(indicator.indicator_id)) {
+          indicatorDiv.classList.add('selected');
+        }
+
+        indicatorDiv.innerHTML = `
+          <h3>${indicator.name}</h3>
+          <p><strong>Definition:</strong> ${indicator.definition}</p>
+          <p><strong>Unit of Measurement:</strong> ${indicator.unit_of_measurement}</p>
+          <p><strong>Disaggregation:</strong> ${indicator.disaggregation}</p>
+          <p><strong>Data Collection Method:</strong> ${indicator.data_collection_method}</p>
+          <p><strong>Underlying Theory of Change:</strong> ${indicator.underlying_theory_of_change}</p>
+          <p><strong>Related SDG:</strong> 
+            <span class="sdg" title="${indicator.sdg_description}">
+              ${indicator.sdg_id} - ${indicator.sdg_name}
+            </span>
+            <span class="filter-icon" title="Learn more about '${indicator.sdg_name}'" onclick="event.stopPropagation() ; window.open('${indicator.sdg_url}', '_blank')">🔗</span>
+          </p>
+          <p><strong>Concepts:</strong> 
+            ${indicator.concepts.map(concept => `
+              <span class="concept" title="${concept.definition}" onclick="event.stopPropagation()">${concept.name}</span>
+              <span class="filter-icon" title="Display all indicators using the concept '${concept.name}'" data-type="concept" data-name="${concept.name}" onclick="event.stopPropagation(); filterIndicatorsBy('concept', '${concept.name}')">🔍</span>
+            `).join(', ')}
+          </p>
+          <p><strong>Packages:</strong> 
+            ${indicator.packages.map(package => `
+              <span class="package" title="${package.definition}" onclick="event.stopPropagation()">${package.name}</span>
+              <span class="filter-icon" title="Display all indicators used by the package '${package.name}'" data-type="package" data-name="${package.name}" onclick="event.stopPropagation(); filterIndicatorsBy('package', '${package.name}')">🔍</span>
+            `).join(', ')}
+          </p>
+          <p><strong>Is standard indicator?</strong> ${indicator.is_standard}</p>
+          <p><strong>Additional info:</strong> 
+            ${indicator.additional_info 
+              ? formatUrlsAsLinks(indicator.additional_info).replace(/<a /g, '<a onclick="event.stopPropagation()" ')
+              : 'N/A'}
+          </p>
+        `;
+
+        // Attach click event for selection
+        indicatorDiv.addEventListener('click', () => toggleIndicatorSelection(indicator.indicator_id, indicator.name, indicatorDiv));
+        indicatorContainer.appendChild(indicatorDiv);
+      });
+
+      indicatorContainer.style.display = expandByDefault && themeIndicatorCount > 0 ? 'block' : 'none';
+      themeDiv.appendChild(themeHeader);
+      themeDiv.appendChild(indicatorContainer);
+
+      // Toggle indicators for this theme
+      themeHeader.addEventListener('click', () => {
+        const icon = themeHeader.querySelector('.toggle-icon');
+        if (indicatorContainer.style.display === 'none') {
+          indicatorContainer.style.display = 'block'; // Expand indicators
+          icon.textContent = '▼'; // Change icon
+        } else {
+          indicatorContainer.style.display = 'none'; // Collapse indicators
+          icon.textContent = '▶'; // Change icon
+        }
+      });
+
+      themeContainer.appendChild(themeDiv);
+    });
+
+    // Toggle themes for this sector
+    sectorHeader.addEventListener('click', () => {
+      const icon = sectorHeader.querySelector('.toggle-icon');
+      if (themeContainer.style.display === 'none') {
+        themeContainer.style.display = 'block'; // Expand themes
+        icon.textContent = '▼'; // Change icon
+      } else {
+        themeContainer.style.display = 'none'; // Collapse themes
+        icon.textContent = '▶'; // Change icon;
+      }
+    });
+
+    sectorDiv.appendChild(sectorHeader);
+    sectorDiv.appendChild(themeContainer);
+    container.appendChild(sectorDiv);
+  });
+}
+
+    function formatUrlsAsLinks(text) {
+      const urlRegex = /(https?:\/\/[^\s]+)/g; // Match URLs starting with http or https
+      return text.replace(urlRegex, url => {
+        try {
+          const urlObject = new URL(url); // Parse the URL to extract the domain
+          const displayUrl = `${urlObject.origin} <span class="link-icon">🔗</span>`; // Add a span for the icon
+          return `<a href="${url}" target="_blank" title="${url}">${displayUrl}</a>`;
+        } catch (e) {
+          console.error("Invalid URL:", url); // Handle invalid URLs gracefully
+          return url; // Return the original text if it's not a valid URL
+        }
+      });
+    }
+
+
+    function filterIndicatorsBy(type, name) {
+      let filteredIndicators;
+      if (type === 'concept') {
+        filteredIndicators = allIndicators.filter(indicator =>
+          indicator.concepts.some(concept => concept.name === name)
+        );
+      } else if (type === 'package') {
+        filteredIndicators = allIndicators.filter(indicator =>
+          indicator.packages.some(package => package.name === name)
+        );
+      }
+
+      displayIndicatorsByThemeAndSector(filteredIndicators);
+
+      // Update the filter result text with matching indicator names
+      updateFilterResult(filteredIndicators.length, `${type === 'concept' ? 'Concept' : 'Package'}: "${name}"`, filteredIndicators);
+    }
+
+
+    function groupBySector(indicators) {
+      const sectors = {};
+
+      indicators.forEach(indicator => {
+        const sector = indicator.sectors || 'Uncategorized'; // Use "Uncategorized" if no sector
+        const theme = indicator.theme_name;
+
+        if (!sectors[sector]) {
+          sectors[sector] = [];
+        }
+
+        let themeGroup = sectors[sector].find(t => t.theme_name === theme);
+        if (!themeGroup) {
+          themeGroup = { theme_name: theme, indicators: [] };
+          sectors[sector].push(themeGroup);
+        }
+
+        themeGroup.indicators.push(indicator);
+      });
+
+      return sectors;
+    }
+
+
+    function groupByTheme(indicators) {
+      return indicators.reduce((groups, indicator) => {
+        const theme = indicator.theme_name;
+        if (!groups[theme]) {
+          groups[theme] = [];
+        }
+        groups[theme].push(indicator);
+        return groups;
+      }, {});
+    }
+
+    function toggleIndicatorSelection(indicatorId, indicatorName, element) {
+      if (selectedIndicators.has(indicatorId)) {
+        selectedIndicators.delete(indicatorId);
+        element.classList.remove('selected');
+      } else {
+        selectedIndicators.set(indicatorId, indicatorName);
+        element.classList.add('selected');
+      }
+      updateSelectedIndicatorsList();
+    }
+
+  function updateSelectedIndicatorsList() {
+    const list = document.getElementById('selectedList');
+    list.innerHTML = ''; // Clear the list
+
+    if (selectedIndicators.size === 0) {
+      list.innerHTML = '<li>No indicators selected</li>';
+    } else {
+      // Create a compact, semicolon-separated list
+      const indicatorNames = Array.from(selectedIndicators.values()).join(' ; ');
+      list.innerHTML = `<li>${indicatorNames}</li>`;
+    }
+  }
+
+    function searchIndicators() {
+      const query = document.getElementById('search').value.toLowerCase();
+      const filteredIndicators = allIndicators.filter(indicator =>
+        indicator.name.toLowerCase().includes(query)
+      );
+      displayIndicatorsByThemeAndSector(filteredIndicators);
+
+      // Update the filter result text with matching indicator names
+      updateFilterResult(filteredIndicators.length, query ? `Search: "${query}"` : null, filteredIndicators);
+    }
+
+    function updateFilterResult(count, filterDescription, indicators) {
+      const filterResultDiv = document.getElementById('filter-result');
+      const resetButton = document.getElementById('reset-filter');
+
+      if (!filterDescription) {
+        filterResultDiv.textContent = ''; // Clear the filter result text
+        resetButton.style.display = 'none'; // Hide the reset button
+      } else {
+        // Display the number of indicators and their names (up to 10)
+        const indicatorNames = indicators.slice(0, 10).map(ind => ind.name).join(', ');
+        const moreIndicators = indicators.length > 10 ? `, and ${indicators.length - 10} more...` : '';
+        filterResultDiv.innerHTML = `
+          ${count} indicator${count !== 1 ? 's' : ''} found for ${filterDescription}.
+          <br><strong>Matching indicators:</strong> ${indicatorNames}${moreIndicators}
+        `;
+        resetButton.style.display = 'block'; // Show the reset button
+      }
+    }
+    
+    function resetFilter() {
+      // Clear the search input
+      document.getElementById('search').value = '';
+
+      // Reset the filter result
+      updateFilterResult(0, null, []);
+
+      // Reload all indicators
+      displayIndicatorsByThemeAndSector(allIndicators, false);
+    }
+
+    function exportSelectedIndicators() {
+      if (selectedIndicators.size === 0) {
+        alert('No indicators selected to export!');
+        return;
+      }
+
+      // Create CSV header
+      let csvContent = 'ID,Name,Definition,Unit of Measurement,Disaggregation,Data Collection Method,Underlying Theory of Change,SDG,Sector,Theme,Concepts,Packages,Additional Info\n';
+
+      // Add selected indicators data
+      selectedIndicators.forEach((name, id) => {
+        const indicator = allIndicators.find(ind => ind.indicator_id === id);
+
+        if (indicator) {
+          const concepts = indicator.concepts.map(c => c.name).join('; ');
+          const packages = indicator.packages.map(p => p.name).join('; ');
+
+          // Format SDG with ID, name, and description
+          const formattedSDG = `${indicator.sdg_id} - ${indicator.sdg_name} - ${indicator.sdg_description} - ${indicator.sdg_url}`;
+
+          csvContent += `"${indicator.indicator_id}","${indicator.name}","${indicator.definition}","${indicator.unit_of_measurement}","${indicator.disaggregation}","${indicator.data_collection_method}","${indicator.underlying_theory_of_change}","${formattedSDG}","${indicator.sectors}","${indicator.theme_name}","${concepts}","${packages}","${indicator.additional_info || ''}"\n`;
+        }
+      });
+
+      // Create a blob and trigger download
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', 'selected_indicators.csv');
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+        
+    function deselectAllIndicators() {
+      // Clear the selected indicators map
+      selectedIndicators.clear();
+
+      // Remove the 'selected' class from all indicator elements
+      const indicatorElements = document.querySelectorAll('.indicator.selected');
+      indicatorElements.forEach(indicator => indicator.classList.remove('selected'));
+
+      // Update the footer
+      updateSelectedIndicatorsList();
+    }
+
+
+
+    fetchIndicators(); // Load indicators on page load
+  </script>
+</body>
+</html>
+

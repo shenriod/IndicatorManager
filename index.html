@@ -178,16 +178,18 @@
     #export-button:hover {
       background-color: #0056b3;
     }
+
     a {
       font-size: 0.9em;
       cursor: help;
-      color: #007BFF; /* Match the primary blue color */
-      text-decoration: none; /* Remove the underline for a cleaner look */
+      color: black;
+      text-decoration: none;
+      border-bottom: 4px solid #80aaff;
+      transition: text-decoration-color 0.3s ease;
     }
 
     a:hover {
-      color: #0056b3; /* Darker blue on hover */
-      text-decoration: underline; /* Add underline on hover for clarity */
+      background-color: #80aaff;
     }
 
     .link-icon {
@@ -198,6 +200,14 @@
 
     a:hover .link-icon {
       color: #0056b3; /* Darker blue for the icon on hover */
+    }
+    
+    a.no-decoration {
+      border-bottom: 0px solid #80aaff;
+    }
+
+    a.no-decoration:hover {
+      background-color: transparent;
     }
     
     #github-link {
@@ -564,7 +574,7 @@ function displayIndicatorsByThemeAndSector(indicators, expandByDefault = false) 
 
     fetchIndicators(); // Load indicators on page load
   </script>
-  <a href="https://github.com/shenriod/IndicatorManager" target="_blank" id="github-link">
+  <a href="https://github.com/shenriod/IndicatorManager" class="no-decoration" target="_blank" id="github-link">
       <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" 
            alt="GitHub" id="github-icon" title="Show me the source code">
   </a>

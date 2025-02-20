@@ -5,7 +5,7 @@ $db = new PDO('sqlite:../db/database.db');
 // Requête pour récupérer les indicateurs par thème
 $query = "
     SELECT i.indicator_id, i.name, i.definition, i.unit_of_measurement, i.disaggregation, 
-           i.data_collection_method, i.underlying_theory_of_change,
+           i.data_collection_method, i.underlying_theory_of_change, i.indicator_level,
            CASE 
 		   WHEN i.is_standard = 'FALSE' THEN 'no'
 		   ELSE 'BMZ Standard indicator'
@@ -64,4 +64,3 @@ foreach ($indicators as &$indicator) {
 header('Content-Type: application/json');
 echo json_encode($indicators);
 ?>
-

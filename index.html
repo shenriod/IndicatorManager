@@ -361,6 +361,7 @@ function displayIndicatorsByThemeAndSector(indicators, expandByDefault = false) 
               ? formatUrlsAsLinks(indicator.additional_info).replace(/<a /g, '<a onclick="event.stopPropagation()" ')
               : 'N/A'}
           </p>
+          <p><strong>Typical level:</strong> ${indicator.indicator_level}</p>
         `;
 
         // Attach click event for selection

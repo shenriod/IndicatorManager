@@ -1,6 +1,6 @@
 <?php
 // Connexion à la base SQLite
-$db = new PDO('sqlite:../db/database.db');
+$db = new PDO('sqlite:../db/database_indicators.db');
 
 // Requête pour récupérer les indicateurs par thème
 $query = "
@@ -11,10 +11,10 @@ $query = "
 		   ELSE 'BMZ Standard indicator'
 		   END as is_standard, 
 		   i.additional_info,
-           t.name AS theme_name, s.name AS sdg_name, s.sdg_id AS sdg_id, s.description as sdg_description, s.url AS sdg_url,
+           t.name AS theme_name, t.description AS theme_description, s.name AS sdg_name, s.sdg_id AS sdg_id, s.description as sdg_description, s.url AS sdg_url,
            GROUP_CONCAT(c.name || '|' || c.definition, '||') AS concepts,
            GROUP_CONCAT(p.name || '|' || p.definition, '||') AS packages,
-		   sec.name AS sectors
+		   sec.name AS sectors, sec.description AS sectors_description
     FROM indicators i
     JOIN themes t ON i.theme_id = t.theme_id
     JOIN sdgs s ON i.sdg_id = s.sdg_id

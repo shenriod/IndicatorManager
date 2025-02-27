@@ -99,3 +99,7 @@ If you plan to develop a production-ready indicator catalog, consider the follow
 This prototype is **not intended for production use**. It is a demonstration tool to showcase the potential of an indicator catalog. If you wish to use it in real-life scenarios, we recommend rebuilding the system with a production-grade approach.
 
 ---
+
+## Contributing
+
+We are not in a position to accept any contribution, as this is not a real open-source project. But don't hesitate to fork it, should you be interested to develop it further.

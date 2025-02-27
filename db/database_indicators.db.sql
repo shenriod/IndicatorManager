@@ -27,16 +27,16 @@ CREATE TABLE IF NOT EXISTS "sectors" (
 CREATE TABLE IF NOT EXISTS "indicator_concepts" (
 	"indicator_id"	INTEGER NOT NULL,
 	"concept_id"	INTEGER NOT NULL,
+	FOREIGN KEY("indicator_id") REFERENCES "indicators"("indicator_id"),
 	PRIMARY KEY("indicator_id","concept_id"),
-	FOREIGN KEY("concept_id") REFERENCES "key_concepts"("concept_id"),
-	FOREIGN KEY("indicator_id") REFERENCES "indicators"("indicator_id")
+	FOREIGN KEY("concept_id") REFERENCES "key_concepts"("concept_id")
 );
 CREATE TABLE IF NOT EXISTS "indicator_packages" (
 	"indicator_id"	INTEGER NOT NULL,
 	"package_id"	INTEGER NOT NULL,
 	FOREIGN KEY("package_id") REFERENCES "packages"("package_id"),
-	FOREIGN KEY("indicator_id") REFERENCES "indicators"("indicator_id"),
-	PRIMARY KEY("indicator_id","package_id")
+	PRIMARY KEY("indicator_id","package_id"),
+	FOREIGN KEY("indicator_id") REFERENCES "indicators"("indicator_id")
 );
 CREATE TABLE IF NOT EXISTS "indicators" (
 	"indicator_id"	INTEGER,
@@ -51,8 +51,8 @@ CREATE TABLE IF NOT EXISTS "indicators" (
 	"additional_info"	TEXT,
 	"is_standard"	TEXT,
 	"indicator_level"	TEXT,
-	PRIMARY KEY("indicator_id" AUTOINCREMENT),
 	FOREIGN KEY("theme_id") REFERENCES "themes"("theme_id"),
+	PRIMARY KEY("indicator_id" AUTOINCREMENT),
 	FOREIGN KEY("sdg_id") REFERENCES "sdgs"("sdg_id")
 );
 CREATE TABLE IF NOT EXISTS "themes" (
@@ -265,82 +265,20 @@ INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (14,'Income
 INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (15,'Recycling','Conversion of materials into the same, higher, or lower value products, including upcycling and downcycling.');
 INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (16,'Turnover Sources','Categories contributing to business revenue, such as product sales or service offerings.');
 INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (17,'Economic Activity','Actions contributing to the production, distribution, or consumption of goods and services in economic systems.');
-INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (18,'Disasters','A serious disruption of the functioning of a community or a society at any scale due to
-hazardous events interacting with conditions of exposure, vulnerability and capacity, leading to one or
-more of the following: human, material, economic and environmental losses and impacts (UNDRR, 2017,
-https://www.preventionweb.net/terminology/disaster).');
-INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (19,'Death','The number of people who died during the disaster, or directly after, as a direct result of the
-hazardous event');
-INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (20,'Missing persons','The number of people whose whereabouts is unknown since the hazardous event. It
-includes people who are presumed dead, for whom there is no physical evidence such as a body, and for
-which an official/legal report has been filed with competent authorities.');
-INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (21,'Disaster-affected persons','People who are affected, either directly or indirectly, by a hazardous event.
-Directly affected are those who have suffered injury, illness or other health effects. Indirectly affected are
-people who have suffered consequences, other than or in addition to direct effects (UNDRR, 2017,
-https://www.preventionweb.net/terminology/disaster).');
-INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (22,'Livelihood','The capacities, productive assets (both living and material) and activities required for securing
-a means of living, on a sustainable basis, with dignity');
-INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (23,'Electricity access','Refers to the proportion of population in the considered area (country,
-region, and global context) that has access to consistent sources of electricity.
-The World Bank’s Global Electrification Database compiles nationally representative household survey data
-as well as census data since 1990. It also incorporates data from the Socio-Economic Database for Latin America and the Caribbean, the Middle East and North Africa Poverty Database, and the Europe and
-Central Asia Poverty Database, all of which are based on similar surveys');
-INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (24,'Forest','According to the FAO, Forest is defined as: “land spanning more than 0.5 hectares with trees higher than
-5 meters and a canopy cover of more than 10 percent, or trees able to reach these thresholds in situ. It
-does not include land that is predominantly under agricultural or urban land use”. More specifically:
-• Forest is determined both by the presence of trees and the absence of other predominant land
-uses. The trees should be able to reach a minimum height of 5 meters.
-• It includes areas with young trees that have not yet reached but which are expected to reach a
-canopy cover of at least 10 percent and tree height of 5 meters or more. It also includes areas
-that are temporarily unstocked due to clear-cutting as part of a forest management practice or
-natural disasters, and which are expected to be regenerated within 5 years. Local conditions
-may, in exceptional cases, justify that a longer time frame is used.
-• It includes forest roads, firebreaks and other small open areas; forest in national parks, nature
-reserves and other protected areas such as those of specific environmental, scientific, historical,
-cultural or spiritual interest.
-• It includes windbreaks, shelterbelts and corridors of trees with an area of more than 0.5 hectares
-and width of more than 20 meters.
-• It includes abandoned shifting cultivation land with a regeneration of trees that have, or are
-expected to reach, a canopy cover of at least 10 percent and tree height of at least 5 meters.
-• It includes areas with mangroves in tidal zones, regardless of whether this area is classified as
-land area or not.
-• It includes rubberwood, cork oak and Christmas tree plantations.
-• It includes areas with bamboo and palms provided that land use, height and canopy cover
-criteria are met.
-• It excludes tree stands in agricultural production systems, such as fruit tree plantations, oil palm
-plantations, olive orchards and agroforestry systems when crops are grown under tree cover.
-Note: Some agroforestry systems such as the “Taungya” system where crops are grown only
-during the first years of the forest rotation should be classified as forest.');
-INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (25,'Land area','Land area is the country area excluding area under inland waters and coastal waters.
-• Country area: Area under national sovereignty. It is the sum of land area, inland waters and
-coastal waters. It excludes the exclusive economic zone.
-• Inland waters: Areas corresponding to natural or artificial water courses, serving to drain natural
-or artificial bodies of water, including lakes, reservoirs, rivers, brooks, streams, ponds, inland
-canals, dams, and other land-locked waters. The banks constitute limits whether the water is
-present or not.
-• Coastal waters: Waters located in-between the land territory and the outer limit of the territorial
-sea. They comprise ''''Internal waters'''' and ''''Territorial sea," and where applicable, ''''Archipelagic
-waters."');
-INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (26,'Undernourishment','Though strictly related, “undernourishment” as defined here is different from the physical conditions of
-“malnutrition” and “undernutrition” as it refers to the condition of insufficient intake of food, rather than
-to the outcome in terms of nutritional status. In French, Spanish and Italian the difference is marked by
-the use of the terms alimentation, alimentación, or alimentazione, instead of nutrition, nutrición or
-nutrizione, in the name of the indicator. A more appropriate expression in English that would render the
-precise meaning of the indicator might have been “prevalence of under-feeding” but by now the term
-“undernourishment” has long been associated with the indicator.');
-INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (27,'Food insecurity','Food insecurity is the state of being unable to consistently access or afford sufficient, safe, and nutritious food to meet basic dietary needs and support a healthy, active life.');
-INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (28,'Renewable energy consumption','Renewable energy consumption includes consumption of energy derived from: hydro, wind, solar, solid
-biofuels, liquid biofuels, biogas, geothermal, marine and renewable waste. Total final energy
-consumption is calculated from balances as total final consumption minus non-energy use.
-Comments regarding specific renewable energy sources:
-• Solar energy includes solar PV and solar thermal.
-• Liquid biofuels include biogasoline, biodiesels and other liquid biofuels.
-• Solid biofuels include fuelwood, animal waste, vegetable waste, black liquor, bagasse and
-charcoal.
-• Renewable waste energy covers energy from renewable municipal waste');
-INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (29,'Greenhouse gas emissions','Greenhouse gas emissions are the release of gases, such as carbon dioxide, methane, and nitrous oxide, into the atmosphere that trap heat and contribute to global warming and climate change.');
+INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (30,'SDG-relevant','A solution, policy, or intervention is considered SDG-relevant if it directly supports progress toward one or more Sustainable Development Goals (SDGs). This relevance is determined by its alignment with SDG targets and indicators, its contribution to solving a clearly identified sustainability challenge, and its potential for measurable impact on economic, social, or environmental dimensions of sustainable development.');
+INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (31,'Replication','The process of adopting and implementing a proven solution, model, or approach in a new geographic, institutional, or sectoral context.');
+INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (32,'Scalability','The ability of a solution to be expanded or adapted efficiently to a larger scope, such as additional regions, sectors, or populations, without significant loss of effectiveness.');
+INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (33,'Successful completion','Completion of a program or initiative by meeting pre-defined criteria, such as passing an exam or obtaining an accredited certification.');
+INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (34,'Meso-level actors','An organization that operates at an intermediary level, bridging macro-level policymakers and micro-level businesses or individuals. Examples include business associations, chambers of commerce, innovation hubs, and startup networks.');
+INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (35,'Pilot measure','A structured initiative designed to test, refine, and validate an approach, intervention, or solution before broader implementation. Pilot measures serve as a controlled environment to assess feasibility, effectiveness, and scalability.');
+INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (36,'Open Innovation Competition','A competitive process where individuals, organizations, or startups submit innovative ideas to address predefined challenges, fostering creativity and participation beyond traditional institutional boundaries.');
+INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (37,'Startup','A newly established business, typically in the early stages of operation, focused on developing an innovative product or service with high growth potential.');
+INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (39,'Incubation and Innovation Center','An institution that supports startups and entrepreneurs by providing funding, mentorship, networking, and access to resources to accelerate business growth.');
+INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (40,'Digital Public Services','Government-provided services that are accessible online, such as digital identity registration, e-governance, and online public assistance programs.');
+INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (41,'Digital Inclusion','Ensuring that all individuals and communities, particularly marginalized groups, have access to and can effectively use digital technologies and services.');
+INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (42,'Innovative Solution','A new or improved product, service, or approach that enhances accessibility, efficiency, or user engagement in digital public services.');
+INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (43,'Digital Ecosystem','A network of stakeholders, including governments, businesses, civil society, and technology providers, working together to develop and expand digital services.');
 INSERT INTO "packages" ("package_id","name","definition") VALUES (1,'SME-Loop','The aim of the MSME Business Training and Coaching Loop (MSME Loop) is to enhance entrepreneurial competencies of business owners of existing micro, small and medium enterprises (MSME) to increase employment and income opportunities for poor people in rural and peri-urban areas. ');
-INSERT INTO "packages" ("package_id","name","definition") VALUES (2,'Tracer studies','M&E standard package to learn how trainees have done 2 years after the training (found work or not, etc.))');
 INSERT INTO "sectors" ("sector_id","name","description") VALUES (1,'Climate, environment, management of natural resources','Conserving natural resources is a basic requirement for sustainable development and improving the quality of human life. To reverse the trend towards resource degradation, we need to give greater priority to ecological principles.
 
 GIZ assists its partners in identifying the wide range of causes of environmental risks. It helps modernise environmental policy at all levels, advises on regional environmental cooperation and develops strategies to embed environmental protection in other areas of policy.
@@ -370,6 +308,7 @@ INSERT INTO "sectors" ("sector_id","name","description") VALUES (7,'Sustainable 
 
 Water is a source of vital nutrients and the basis for hygiene. But it is an economic good and production factor, too. Access to this essential resource and to good sanitation is essential for health, peaceful coexistence and productivity. 
 ');
+INSERT INTO "sectors" ("sector_id","name","description") VALUES (8,'Cross-sector','Indicators and initiatives that are relevant across multiple sectors, fostering interdisciplinary collaboration and holistic approaches to development challenges.');
 INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (1,1);
 INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (1,2);
 INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (1,3);
@@ -398,19 +337,23 @@ INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (14,1);
 INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (15,2);
 INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (15,14);
 INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (16,2);
-INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (18,18);
-INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (18,19);
-INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (18,20);
-INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (18,21);
-INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (18,22);
-INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (19,23);
-INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (20,24);
-INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (20,25);
-INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (21,26);
-INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (22,26);
-INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (22,27);
-INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (23,28);
-INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (17,29);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (24,30);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (24,31);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (24,32);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (25,33);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (25,34);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (25,35);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (26,30);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (26,36);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (27,37);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (27,39);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (27,2);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (28,40);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (28,41);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (28,42);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (28,43);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (8,39);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (8,42);
 INSERT INTO "indicator_packages" ("indicator_id","package_id") VALUES (7,1);
 INSERT INTO "indicator_packages" ("indicator_id","package_id") VALUES (8,1);
 INSERT INTO "indicator_packages" ("indicator_id","package_id") VALUES (9,1);
@@ -438,122 +381,16 @@ INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of
 INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level") VALUES (14,1,'Additional employment','Measures the number of additional employment opportunities created, beyond initial project goals.','Number','Gender, age, employment type','Enterprise surveys, payroll records','Additional employment strengthens workforce participation and economic stability.','8.5','You can find more information on this indicator here: https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf and here https://unstats.un.org/sdgs/metadata/?Goal=8&Target=8.5','TRUE','Output');
 INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level") VALUES (15,5,'Higher income (entrepreneur/employees)','Tracks the increase in income for entrepreneurs and employees resulting from project support.','Currency (e.g., USD, EUR)','Gender, region, sector','Surveys, financial records','Higher income improves living standards and supports economic development.','10.1','https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf','FALSE','Output');
 INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level") VALUES (16,9,'Improved working conditions','Measures improvements in workplace safety, facilities, and employment benefits.','Number','Type of improvement, region','Workplace audits, employee surveys','Improved working conditions enhance employee satisfaction and productivity.','8.8','https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf','FALSE','Outcome');
-INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level") VALUES (17,12,'Total greenhouse gas emissions per year','The ultimate objective of the Climate Change Convention (UNFCCC) is to achieve the stabilization of
-greenhouse gas concentrations in the atmosphere at a level that would prevent dangerous
-anthropogenic interference with the climate system. Estimating the levels of greenhouse gas (GHG)
-emissions and removals is an important element of the efforts to achieve this objective','Mt CO2-equivalent','Countres; regions; industries','Country reporting','The ultimate objective of the Climate Change Convention (UNFCCC) is to achieve the stabilization of
-greenhouse gas concentrations in the atmosphere at a level that would prevent dangerous
-anthropogenic interference with the climate system. Estimating the levels of greenhouse gas (GHG)
-emissions and removals is an important element of the efforts to achieve this objective.
-In accordance with Articles 4 and 12 of the Climate Change Convention and the relevant decisions of the
-Conference of the Parties, countries that are Parties to the Convention submit national GHG inventories
-to the Climate Change secretariat. These submissions are made in accordance with the reporting
-requirements adopted under the Convention, such as the revised “Guidelines for the preparation of
-national communications by Parties included in Annex I to the Convention, Part I: UNFCCC reporting
-guidelines on annual greenhouse gas inventories” (decision 24/CP.19) for Annex I Parties and “Guidelines
-for the preparation of national communications for non-Annex I Parties” (decision 17/CP.8). The
-inventory data are provided in the annual GHG inventory submissions by Annex I Parties and in the
-national communications and biennial update reports by non-Annex I Parties.','13.2','https://unstats.un.org/sdgs/metadata/files/Metadata-13-02-02.pdf','FALSE','Output');
-INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level") VALUES (18,11,'Number of deaths, missing persons and directly affected persons attributed to disasters per 100,000 population','This indicator measures the number of people who died, went missing or were directly affected by
-disasters per 100,000 population.','Number of people','Countries; Regions','Country reporting (Sendai framework)','The Sendai Framework for Disaster Risk Reduction 2015-2030 was adopted by UN Member States in
-March 2015 as a global policy of disaster risk reduction. Among the global targets, “Target A:
-Substantially reduce global disaster mortality by 2030, aiming to lower average per 100,000 global
-mortality between 2020-2030 compared with 2005-2015” and “Target B: Substantially reduce the
-number of affected people globally by 2030, aiming to lower the average global figure per 100,000
-between 2020-2030 compared with 2005-2015” will contribute to sustainable development and
-strengthen economic, social, health and environmental resilience. The economic, environmental and
-social perspectives would include poverty eradication, urban resilience, and climate change adaptation.','13.1','https://unstats.un.org/sdgs/metadata/files/Metadata-13-01-01.pdf','FALSE','Outcome');
-INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level") VALUES (19,13,'Proportion of population with access to electricity','Proportion of population with access to electricity is the percentage of population with access to electricity.
-SDG7 ensures access to affordable, reliable, sustainable and modern energy for all. Specifically, Indicator
-7.1.1 refers to the proportion of population with access to electricity. This is expressed in percentage
-figures and is disaggregated by total, urban and rural access rates per country, as well as by UN regional
-and global classifications','Percent','Countries; regions; urban/rural; marginalized groups','If data sources have any information on electricity access, it is collected and analysed in line with the
-previous trends and future projections of each country. Data validation is conducted by checking that the
-figures are reflective of the ground level scenario as well as are in line with country populations, income
-levels and electrification programs.','Access to electricity addresses major critical issues in all the dimensions of sustainable development. The
-target has a wide range of social and economic impacts, including facilitating development of income
-generating activities and lightening the burden of household tasks.
-Under the global target of equal access to energy, SDG7.1.1 focuses specifically on electricity access
-available to the global population. In order to gain a clear picture, access rates are only considered if the
-primary source of lighting is the local electricity provider, solar systems, mini-grids and stand-alone
-systems. Sources such as generators, candles, batteries, etc., are not considered due to their limited
-working capacities and since they are usually kept as backup sources for lighting.','7.1','https://unstats.un.org/sdgs/metadata/files/Metadata-07-01-01.pdf','FALSE','Output');
-INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level") VALUES (20,14,'Forest area as a proportion of total land area','Data on Forest area are collected by FAO through the Global Forest Resources Assessment (FRA). This
-assessment has been carried out at regular intervals since 1946 and are now produced every five year.
-The latest of these assessments, FRA 2020, contains information for 236 countries and territories on
-about 60 variables related to the extent of forests, their conditions, uses and values for several points in
-time','Percent (%)','Countries; regions','Officially nominated national correspondents and their teams prepare the country reports for the Global
-Forest Resources Assessment. Some countries prepare more than one report as they also report on
-dependent territories. For the remaining countries and territories where no information is provided, a
-report is prepared by FAO using existing information, literature search, remote sensing or a combination
-of two or more of them','Forests fulfil a number of functions that are vital for humanity, including the provision of goods (wood
-and non-wood forest products) and services such as habitats for biodiversity, carbon sequestration,
-coastal protection and soil and water conservation.
-The indicator provides a measure of the relative extent of forest in a country. The availability of accurate
-data on a country''s forest area is a key element for forest policy and planning within the context of
-sustainable development.
-Changes in forest area reflect the demand for land for other uses and may help identify unsustainable
-practices in the forestry and agricultural sector.
-Forest area as percentage of total land area may be used as a rough proxy for the extent to which the
-forests in a country are being conserved or restored, but it is only partly a measure for the extent to
-which they are sustainably managed.
-The indicator was included among the indicators for the Millennium Development Goals (MDG indicator
-7.1 “Proportion of land covered by forest”).','15.1','Details of the SDG indicator 15.1.1 are to be found here: https://unstats.un.org/sdgs/metadata/files/Metadata-15-01-01.pdf','FALSE','Output');
-INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level") VALUES (21,15,'Prevalence of undernourishment ','Prevalence of undernourishment ','Percentage','Urban / rural ; regions','Official information on food commodity production, trade and utilization used by FAO to compile Food
-Balance Sheets is provided mainly by Statistical Units of the Ministry of Agriculture. FAO sends out a data
-collection questionnaire every year to an identified focal point.','The indicator has been used by FAO to monitor the World Food Summit Target and the MDG Target 1C,
-at national, regional and global level, since 1999. It allows monitoring trends in the extent of dietary
-energy inadequacy in a population over time, generated as a result of the combination of changes in the
-overall availability of food, in the households’ ability to access it, and in the socio-demographic
-characteristics of the population, as well as differences across countries and regions in any given moment
-in time.
-The parametric approach adopted by FAO allows obtaining reliable estimated for relatively large
-population groups. As it reflects a severe condition of lack of food, it is fully consistent with the spirit of a
-Goal that aims at reducing hunger.','2.1','See here: https://unstats.un.org/sdgs/metadata/files/Metadata-02-01-01.pdf','FALSE','Outcome');
-INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level") VALUES (22,15,'Prevalence of moderate or severe food insecurity in the population, based on the Food
-Insecurity Experience Scale (FIES)','The indicator measures the percentage of individuals in the population who have experienced food
-insecurity at moderate or severe levels during the reference period. The severity of food insecurity,
-defined as a latent trait, is measured on the Food Insecurity Experience Scale global reference scale, a measurement standard established by FAO through the application of the Food Insecurity Experience
-Scale in more than 140 countries worldwide, starting in 2014','Prevalence of food insecurity: Percent (%)
-Number of food insecure people: Millions (of people)','As the FIES or any other compatible experience-based food security questionnaire is applied through
-surveys, the prevalence of food insecurity can be measured in any population group for which the survey
-used to collect data is representative.
-If applied at household level, disaggregation is thus possible based on household characteristics such as
-location, household income, composition (including for example presence and number of small children,
-members with disabilities, elderly members, etc.), sex, age and education of the household head, etc. If
-applied at the individual level, proper disaggregation of the prevalence of food insecurity by sex is
-possible as the prevalence of food insecurity among male and among female members of the same
-population group can be measured independently','Face-to-face and telephone interviews within national surveys.','Food insecurity at moderate levels of severity is typically associated with the inability to regularly eat
-healthy, balanced diets. As such, high prevalence of food insecurity at moderate levels can be considered
-a predictor of various forms of diet-related health conditions in the population, associated with
-micronutrient deficiency and unbalanced diets. Severe levels of food insecurity, on the other hand, imply
-a high probability of reduced food intake and therefore can lead to more severe forms of undernutrition,
-including hunger.
-Short questionnaires like the FIES are very easy to administer at limited cost, which is one of the main
-advantages of their use. The ability to precisely determine the food insecurity status of specific
-individuals or households, however, is limited by the small number of questions, a reason why
-assignment of individual respondents to food insecurity classes is best done in probability terms, thus
-ensuring that estimates of prevalence rates in a population are sufficiently reliable even when based on
-relatively small sample sizes.
-As with any statistical assessment, reliability and precision crucially depend on the quality of the survey
-design and implementation. One major advantage of the analytic treatment of the data through the
-Rasch model-based methods is that it permits testing the quality of the data collected and evaluating the
-likely margin of uncertainty around estimated prevalence rates, which should always be reported.','2.1','https://unstats.un.org/sdgs/metadata/files/Metadata-02-01-02.pdf','FALSE','Output');
-INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level") VALUES (23,13,'Renewable energy share in the total final energy consumption ','The renewable energy share in total final consumption is the percentage of final consumption of energy
-that is derived from renewable resources.','Percentage','By resource; by production-sector; by end-use sector','The IEA collects energy data at the national level according to harmonised international definitions and
-questionnaires, as described in the UN International Recommendations for Energy Statistics
-(unstats.un.org/unsd/energystats/methodology/ires/).
-UNSD also collects energy statistics from countries according to the same harmonised methodology','The target “By 2030, increase substantially the share of renewable energy in the global energy mix”
-impacts all three dimensions of sustainable development. Renewable energy technologies represent a
-major element in strategies for greening economies everywhere in the world and for tackling the critical
-global problem of climate change. A number of definitions of renewable energy exist; what they have in
-common is highlighting as renewable all forms of energy that their consumption does not deplete their
-availability in the future. These include solar, wind, ocean, hydropower, geothermal sources, and
-bioenergy (in the case of bioenergy, which can be depleted, sources of bioenergy can be replaced within
-a short to medium-term frame). Importantly, this indicator focuses on the amount of renewable energy
-actually consumed rather than the capacity for renewable energy production, which cannot always be
-fully utilized. By focusing on consumption by the end user, it avoids the distortions caused by the fact
-that conventional energy sources are subject to significant energy losses along the production chain','7.2','https://unstats.un.org/sdgs/metadata/files/Metadata-07-02-01.pdf','FALSE','Output');
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level") VALUES (24,16,'Adoption of SDG-Relevant Solutions in Other Countries','This indicator measures the extent to which SDG-relevant solutions developed within a project or program are replicated and applied in other countries. The indicator tracks the transfer and implementation of such solutions beyond their original context, demonstrating scalability and cross-border impact.','Number of countries','Region / continent; SDG goal; type of solution  (policy, technology, business model, capacity-building approach, etc.)','Review of national strategies and action plans in target countries;
+Analysis of policy implementation reports;
+Evaluation of meeting minutes from networking events and conferences;
+Publicly available SDG monitoring reports from national and international sources','If SDG-relevant solutions developed in one country are successfully implemented in other countries, this demonstrates their scalability and effectiveness. The international adoption of solutions fosters regional integration, policy alignment, and knowledge transfer, leading to accelerated progress toward achieving the Sustainable Development Goals (SDGs) on a broader scale.','17','This indicator is not sector-specific and applies to all fields where SDG solutions are developed; 
+Solutions could include policy recommendations, digital innovations, business models, or governance strategies; 
+The adoption of solutions can be fully or partially implemented in new contexts.','FALSE','Outcome');
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level") VALUES (25,18,'Successful Participation in Pilot Measures for Digital and Entrepreneurial Skills','This indicator measures the number of participants who successfully complete pilot initiatives led by meso-level actors to enhance their digital and entrepreneurial competencies.','Number of participants successfully completing the pilot measures','Gender; type of meso-level actor (e.g., public institution, private sector organization, business association, civil society organization, innovation hub); type of intervention (e.g., training, certification, platform integration)','Analysis of participant lists from the pilot programs; Review of issued certificates; Assessment results from final tests or accreditation processes','If meso-level actors provide structured training and certification programs, participants will improve their digital and entrepreneurial skills, increasing their employability, business success, and economic resilience. Strengthening the capacity of intermediary institutions ensures long-term sustainability in supporting digital transformation and entrepreneurship.','4','','FALSE','Outcome');
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level") VALUES (26,18,'Development of SDG-Relevant Digital Solutions','This indicator measures the number of digital solutions developed by a dedicated partner, center or initiative that explicitly contribute to the Sustainable Development Goals (SDGs). These solutions may be developed: In collaboration with sector ministries to ensure policy alignment and institutional support; As a result of open innovation competitions, where ideas are sourced from diverse stakeholders.','Number of SDG-relevant digital solutions developed','Ddevelopment approach (e.g., sector ministry collaboration, open competition); Thematic SDG focus (e.g., health, education, climate action); Implementation status (e.g., prototype, pilot stage, fully deployed)','Project documentation reviews; Press releases and public announcements; Minutes from meetings with sector ministries; Records demonstrating SDG alignment; Documentation of open competitions and winning solutions','If digital innovations are developed with a clear SDG focus, they can address critical development challenges more effectively. Engaging sector ministries ensures institutional ownership and scalability, while open innovation competitions foster inclusive participation and diverse problem-solving approaches.','9','Digital solutions can include apps, platforms, data-driven tools, AI-powered systems, and e-governance solutions; Open competitions provide an opportunity for entrepreneurs, civil society, and researchers to contribute innovative ideas.','FALSE','Output');
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level") VALUES (27,18,'Startups Receiving Financial Support for Business Formation','This indicator measures the number of startups that have received financial support from an incubation or innovation center to establish or expand their business operations. The support aims to enhance entrepreneurial success, business sustainability, and innovation-driven growth.','Number of startups financially supported','Type of financial support (e.g., grants, seed funding, equity investment, subsidized loans); Sector (e.g., technology, agriculture, renewable energy); Startup maturity level (e.g., early-stage, growth-stage); Founder characteristics (e.g., gender, youth-led, minority-led businesses)','Review of financing agreements/contracts between the incubation center and supported startups; Surveys and interviews with funded startups to assess impact and usage of financial support; Financial records and disbursement reports from the incubation center','If startups receive financial support in their early stages, they are more likely to survive, scale, and contribute to economic development. Incubation and innovation centers play a crucial role in providing not only funding but also mentorship, networking, and capacity-building opportunities.','9','Financial support can come in various forms, including grants, soft loans, convertible equity, or performance-based financing. Incubation centers often complement financial support with training, mentoring, and networking opportunities.','FALSE','Output');
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level") VALUES (28,18,'Innovative Solutions for Digital Awareness and Inclusion','This indicator measures the number of innovative solutions that have been developed and implemented to increase public awareness and digital inclusion, particularly among marginalized groups such as women, for the adoption of digital public services. These solutions should be developed in collaboration with the digital ecosystem and aim to improve accessibility, usability, and engagement.','Number of innovative solutions introduced','Type of solution (e.g., digital literacy platforms, mobile applications, public outreach campaigns, interactive digital kiosks); Target group (e.g., women, rural populations, persons with disabilities); Partnership type (e.g., public-private collaboration, government-led, civil society involvement)','Assessment of the content, functionalities, and accessibility of the innovative solutions; User feedback and engagement metrics (e.g., number of users, completion rates, satisfaction surveys); Documentation and progress reports from implementing partners','If innovative digital solutions are developed and tailored to the needs of marginalized populations, then digital inclusion and awareness will increase, leading to higher adoption of digital public services. This, in turn, can improve access to government services, participation in the digital economy, and social inclusion.','5','The digital ecosystem includes government institutions, private sector actors, civil society organizations, and technology providers that contribute to digital service delivery. Solutions should ensure user-centric design, accessibility standards, and sustainability beyond initial implementation.','FALSE','Output');
 INSERT INTO "themes" ("theme_id","name","description","sector_id") VALUES (1,'Employment and Jobs','Covers indicators related to job creation, decent work, and workforce participation.',2);
 INSERT INTO "themes" ("theme_id","name","description","sector_id") VALUES (2,'Enterprise Development','Focuses on indicators about the growth, sustainability, and management of enterprises.',2);
 INSERT INTO "themes" ("theme_id","name","description","sector_id") VALUES (3,'Environmental Sustainability','Includes indicators related to green practices, resource efficiency, and reduction of harmful impacts.',2);
@@ -564,9 +401,7 @@ INSERT INTO "themes" ("theme_id","name","description","sector_id") VALUES (7,'Su
 INSERT INTO "themes" ("theme_id","name","description","sector_id") VALUES (8,'Investment and Capital Mobilization','Addresses indicators related to financial investments and private sector contributions.',2);
 INSERT INTO "themes" ("theme_id","name","description","sector_id") VALUES (9,'Health and Well-being','Covers indicators on health outcomes, safety standards, and the well-being of participants.',2);
 INSERT INTO "themes" ("theme_id","name","description","sector_id") VALUES (10,'Innovation and Technology','Focuses on indicators related to the adoption and impact of innovative practices and technologies.',2);
-INSERT INTO "themes" ("theme_id","name","description","sector_id") VALUES (11,'Climate change adaptation','Adjusting systems, practices, and infrastructure to minimize harm or maximize benefits from the impacts of climate change.',1);
-INSERT INTO "themes" ("theme_id","name","description","sector_id") VALUES (12,'Climate change mitigation','Actions taken to reduce or prevent the emission of greenhouse gases, thereby limiting the extent of future climate change.',1);
-INSERT INTO "themes" ("theme_id","name","description","sector_id") VALUES (13,'Access to energy','Ensure universal access to affordable, reliable and modern energy services',7);
-INSERT INTO "themes" ("theme_id","name","description","sector_id") VALUES (14,'Land cover','Land cover refers to the physical material on the surface of the Earth, such as vegetation, urban infrastructure, water, bare soil, and other natural or human-made features.',1);
-INSERT INTO "themes" ("theme_id","name","description","sector_id") VALUES (15,'Food security','Food security is the state in which all people, at all times, have physical, social, and economic access to sufficient, safe, and nutritious food to meet their dietary needs and preferences for an active and healthy life.',4);
+INSERT INTO "themes" ("theme_id","name","description","sector_id") VALUES (16,'Replication of successful activities','Implemented activities and successes are replicated in other contexts / countries',8);
+INSERT INTO "themes" ("theme_id","name","description","sector_id") VALUES (17,'Capacity development','All activities specifically aimed at building or strengthening the capacities of individuals and institutions',8);
+INSERT INTO "themes" ("theme_id","name","description","sector_id") VALUES (18,'Digital transformation','The process of integrating digital technologies into all aspects of society, businesses, and governance to improve efficiency, accessibility, and innovation, while fostering inclusion and sustainable development.',8);
 COMMIT;

@@ -1,6 +1,6 @@
 <?php
 // Connexion à la base SQLite
-$db = new PDO('sqlite:../db/database.db');
+$db = new PDO('sqlite:../db/database_indicators.db');
 
 // Requête pour récupérer tous les SDGs
 $query = "SELECT * FROM sdgs ORDER BY name;";
@@ -13,4 +13,3 @@ $sdgs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 header('Content-Type: application/json');
 echo json_encode($sdgs);
 ?>
-

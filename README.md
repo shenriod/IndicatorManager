@@ -1,4 +1,4 @@
-# Indicator Manager (Prototype)
+# Indicator Manager [Prototype]
 
 **Indicator Manager** is a **prototype** designed to demonstrate how a harmonized catalog of indicators could function. It allows users to organize, explore, and manage indicators grouped by sectors, themes, and SDGs, offering an interactive and user-friendly experience. While fully functional, **this prototype was built for demonstration purposes and is not intended for production use**.
 
@@ -103,3 +103,7 @@ This prototype is **not intended for production use**. It is a demonstration too
 ## Contributing
 
 We are not in a position to accept any contribution, as this is not a real open-source project. But don't hesitate to fork it, should you be interested to develop it further.
+
+## Contact
+
+You can contact me through www.henriod.info 

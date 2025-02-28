@@ -14,7 +14,8 @@ $query = "
            t.name AS theme_name, t.description AS theme_description, s.name AS sdg_name, s.sdg_id AS sdg_id, s.description as sdg_description, s.url AS sdg_url,
            GROUP_CONCAT(c.name || '|' || c.definition, '||') AS concepts,
            GROUP_CONCAT(p.name || '|' || p.definition, '||') AS packages,
-		   sec.name AS sectors, sec.description AS sectors_description
+           sec.name AS sectors, sec.description AS sectors_description,
+           u.unit_shortname AS unit_shortname, u.unit_longname AS unit_longname
     FROM indicators i
     JOIN themes t ON i.theme_id = t.theme_id
     JOIN sdgs s ON i.sdg_id = s.sdg_id
@@ -23,8 +24,9 @@ $query = "
     LEFT JOIN key_concepts c ON ic.concept_id = c.concept_id
     LEFT JOIN packages p ON ip.package_id = p.package_id
     LEFT JOIN sectors sec ON t.sector_id = sec.sector_id
+    LEFT JOIN units u ON i.responsible_unit = u.unit_id
     GROUP BY i.indicator_id
-    ORDER BY sec.name, t.name, i.name;
+    ORDER BY sec.sector_id, t.name, i.name;
 ";
 
 $stmt = $db->prepare($query);

@@ -66,18 +66,13 @@
       font-size: 1.2em;
       margin-left: 10px;
     }
-    .concept, .package {
-      font-size: 0.9em;
-      color: #555;
-      cursor: help;
-    }
-    .sdg {
+    .concept, .package, .responsible-unit, .sdg, .typical-level {
       font-size: 0.9em;
       color: #555;
       cursor: help;
     }
 
-    .sdg:hover {
+    .concept:hover, .package:hover, .responsible-unit:hover, .sdg:hover, .typical-level:hover {
       text-decoration: underline;
     }
 
@@ -342,17 +337,21 @@ function displayIndicatorsByThemeAndSector(indicators, expandByDefault = false) 
             <span class="sdg" title="${indicator.sdg_description}">
               ${indicator.sdg_id} - ${indicator.sdg_name}
             </span>
-            <span class="filter-icon" title="Learn more about '${indicator.sdg_name}'" onclick="event.stopPropagation() ; window.open('${indicator.sdg_url}', '_blank')">🔗</span>
-          </p>
+            <span class="filter-icon" title="Learn more about '${indicator.sdg_name}'" onclick="event.stopPropagation(); window.open('${indicator.sdg_url}', '_blank')">🔗</span>
+            <span class="filter-icon" title="Display all indicators contributing to SDG ${indicator.sdg_id} - ${indicator.sdg_name}" 
+                  data-type="sdg" 
+                  data-name="${indicator.sdg_id}" 
+                  onclick="event.stopPropagation(); filterIndicatorsBy('sdg', '${indicator.sdg_id}')">🔍</span>
+          </p>             
           <p><strong>Concepts:</strong> 
             ${indicator.concepts.map(concept => `
-              <span class="concept" title="${concept.definition}" onclick="event.stopPropagation()">${concept.name}</span>
+              <span class="concept" title="${concept.definition}">${concept.name}</span>
               <span class="filter-icon" title="Display all indicators using the concept '${concept.name}'" data-type="concept" data-name="${concept.name}" onclick="event.stopPropagation(); filterIndicatorsBy('concept', '${concept.name}')">🔍</span>
             `).join(', ')}
           </p>
           <p><strong>Packages:</strong> 
             ${indicator.packages.map(package => `
-              <span class="package" title="${package.definition}" onclick="event.stopPropagation()">${package.name}</span>
+              <span class="package" title="${package.definition}"">${package.name}</span>
               <span class="filter-icon" title="Display all indicators used by the package '${package.name}'" data-type="package" data-name="${package.name}" onclick="event.stopPropagation(); filterIndicatorsBy('package', '${package.name}')">🔍</span>
             `).join(', ')}
           </p>
@@ -362,7 +361,24 @@ function displayIndicatorsByThemeAndSector(indicators, expandByDefault = false) 
               ? formatUrlsAsLinks(indicator.additional_info).replace(/<a /g, '<a onclick="event.stopPropagation()" ')
               : 'N/A'}
           </p>
-          <p><strong>Typical level:</strong> ${indicator.indicator_level}</p>
+          <p><strong>Typical level:</strong> 
+            <span class="tooltip">
+              <span class="typical-level" title="This indicator typically contributes to monitoring at the ${indicator.indicator_level} level">${indicator.indicator_level}</span>
+            </span>
+            <span class="filter-icon" title="Display all ${indicator.indicator_level}-level indicators" 
+                  data-type="typical_level" 
+                  data-name="${indicator.indicator_level}" 
+                  onclick="event.stopPropagation(); filterIndicatorsBy('typical_level', '${indicator.indicator_level}')">🔍</span>
+          </p>
+          <p><strong>Responsible unit:</strong> 
+            <span class="tooltip">
+              <span class="responsible-unit" title="${indicator.unit_longname}">${indicator.unit_shortname}</span>
+            </span>
+          <span class="filter-icon" title="Display all indicators maintained by ${indicator.unit_shortname} - ${indicator.unit_longname}" 
+          data-type="responsible_unit" 
+          data-name="${indicator.unit_shortname}" 
+          onclick="event.stopPropagation(); filterIndicatorsBy('responsible_unit', '${indicator.unit_shortname}')">🔍</span>
+          </p>
         `;
 
         // Attach click event for selection
@@ -432,12 +448,32 @@ function displayIndicatorsByThemeAndSector(indicators, expandByDefault = false) 
         filteredIndicators = allIndicators.filter(indicator =>
           indicator.packages.some(package => package.name === name)
         );
+        } else if (type === 'responsible_unit') {
+        filteredIndicators = allIndicators.filter(indicator =>
+          indicator.unit_shortname === name
+        );
+        } else if (type === 'typical_level') { 
+        filteredIndicators = allIndicators.filter(indicator =>
+          indicator.indicator_level === name
+        );
+        } else if (type === 'sdg') {
+        filteredIndicators = allIndicators.filter(indicator =>
+          indicator.sdg_id === name
+        );
       }
 
       displayIndicatorsByThemeAndSector(filteredIndicators);
 
       // Update the filter result text with matching indicator names
-      updateFilterResult(filteredIndicators.length, `${type === 'concept' ? 'Concept' : 'Package'}: "${name}"`, filteredIndicators);
+      updateFilterResult(
+        filteredIndicators.length,
+        `${type === 'concept' ? 'Concept' : 
+          type === 'package' ? 'Package' : 
+          type === 'responsible_unit' ? 'Responsible Unit' : 
+          type === 'typical_level' ? 'Typical Level' : 
+          'SDG'}: "${name}"`,
+        filteredIndicators
+      );
     }
 
 

@@ -4,7 +4,8 @@
 
 ---
 
-![image](https://github.com/user-attachments/assets/ca4eceee-98ee-4650-8a69-e69572f1b0b5)
+![image](https://github.com/user-attachments/assets/ac05b48d-9be0-4f9c-b4cb-4f4db8d133e0)
+
 
 ---
 
@@ -35,8 +36,7 @@ This prototype aims to illustrate the potential usefulness of a centralized indi
 - **SDG Integration**: Each indicator links to its related SDG, with tooltips for descriptions and quick links to SDG details.
 - **Indicator Selection and Export**: Select indicators for review and export them in a structured CSV format.
 
-![image](https://github.com/user-attachments/assets/2c2068db-015c-4858-b3eb-7cd720f784b4)
-
+![image](https://github.com/user-attachments/assets/40daabe1-37fd-4895-9626-b069a30f859e)
 
 ---
 

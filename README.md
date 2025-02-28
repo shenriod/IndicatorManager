@@ -1,4 +1,4 @@
-# Indicator Manager [Prototype]
+# Indicator Manager - ⚠️Prototype⚠️
 
 **Indicator Manager** is a **prototype** designed to demonstrate how a harmonized catalog of indicators could function. It allows users to organize, explore, and manage indicators grouped by sectors, themes, and SDGs, offering an interactive and user-friendly experience. While fully functional, **this prototype was built for demonstration purposes and is not intended for production use**.
 
@@ -7,19 +7,19 @@
 
 ---
 
-## Demo 
+## 🔗 Demo 
 
 A demo version is available under https://www.henriod.info/dsc
 
 ---
 
-## Purpose
+## 💡 Purpose
 
 This prototype aims to illustrate the potential usefulness of a centralized indicator catalog for projects and organizations. It showcases features that could be expanded and refined in a production-ready version of the tool.
 
 ---
 
-## Limitations of the Prototype
+## 🚧 Limitations of the Prototype
 
 - **No Production Features**: This version does not include critical production-ready features, such as user authentication or advanced security measures.
 - **Demonstration Focus**: The architecture and codebase were designed for rapid prototyping and proof-of-concept purposes rather than for scalability or long-term use.
@@ -27,7 +27,7 @@ This prototype aims to illustrate the potential usefulness of a centralized indi
 
 ---
 
-## Features
+## 📋 Features
 
 - **Dynamic Organization**: Indicators are grouped by sector and theme, with expandable/collapsible sections for easy navigation.
 - **Interactive Search and Filter**: Quickly find indicators based on keywords, concepts, SDGs, or packages.
@@ -38,7 +38,7 @@ This prototype aims to illustrate the potential usefulness of a centralized indi
 
 ---
 
-## Installation
+## 💻 Installation
 
 To explore the prototype locally, follow these steps:
 
@@ -60,7 +60,7 @@ To explore the prototype locally, follow these steps:
 
 ---
 
-## File Structure
+## 📁 File Structure
 
 - `/api/`: Backend PHP scripts for retrieving indicators.
 - `/db/`: SQLite database and schema.
@@ -68,7 +68,7 @@ To explore the prototype locally, follow these steps:
 
 ---
 
-## Usage
+## 📊 Usage
 
 1. **View Indicators**:
    - Browse indicators organized by sectors and themes.
@@ -79,7 +79,7 @@ To explore the prototype locally, follow these steps:
    
 ---
 
-## Future Considerations
+## ⏳ Future Considerations
 
 If you plan to develop a production-ready indicator catalog, consider the following:
 
@@ -92,16 +92,16 @@ If you plan to develop a production-ready indicator catalog, consider the follow
 
 ---
 
-## Disclaimer
+## ⚠️ Disclaimer
 
 This prototype is **not intended for production use**. It is a demonstration tool to showcase the potential of an indicator catalog. If you wish to use it in real-life scenarios, we recommend rebuilding the system with a production-grade approach.
 
 ---
 
-## Contributing
+## 🔌 Contributing
 
 We are not in a position to accept any contribution, as this is not a real open-source project. But don't hesitate to fork it, should you be interested to develop it further.
 
-## Contact
+## 💌 Contact
 
 You can contact me through www.henriod.info 

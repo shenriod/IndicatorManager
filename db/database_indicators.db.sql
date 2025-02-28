@@ -34,8 +34,8 @@ CREATE TABLE IF NOT EXISTS "indicator_concepts" (
 CREATE TABLE IF NOT EXISTS "indicator_packages" (
 	"indicator_id"	INTEGER NOT NULL,
 	"package_id"	INTEGER NOT NULL,
-	FOREIGN KEY("indicator_id") REFERENCES "indicators"("indicator_id"),
 	FOREIGN KEY("package_id") REFERENCES "packages"("package_id"),
+	FOREIGN KEY("indicator_id") REFERENCES "indicators"("indicator_id"),
 	PRIMARY KEY("indicator_id","package_id")
 );
 CREATE TABLE IF NOT EXISTS "themes" (
@@ -43,14 +43,27 @@ CREATE TABLE IF NOT EXISTS "themes" (
 	"name"	TEXT NOT NULL,
 	"description"	TEXT,
 	"sector_id"	INTEGER,
-	FOREIGN KEY("sector_id") REFERENCES "sectors"("sector_id"),
-	PRIMARY KEY("theme_id" AUTOINCREMENT)
+	PRIMARY KEY("theme_id" AUTOINCREMENT),
+	FOREIGN KEY("sector_id") REFERENCES "sectors"("sector_id")
 );
 CREATE TABLE IF NOT EXISTS "units" (
 	"unit_id"	INTEGER,
 	"unit_shortname"	TEXT NOT NULL,
 	"unit_longname"	TEXT NOT NULL,
 	PRIMARY KEY("unit_id" AUTOINCREMENT)
+);
+CREATE TABLE IF NOT EXISTS "sap_topics" (
+	"topic_id"	INTEGER,
+	"topic_name"	TEXT NOT NULL,
+	"topic_cat"	TEXT NOT NULL,
+	PRIMARY KEY("topic_id" AUTOINCREMENT)
+);
+CREATE TABLE IF NOT EXISTS "indicator_saptopics" (
+	"indicator_id"	INTEGER NOT NULL,
+	"topic_id"	INTEGER NOT NULL,
+	FOREIGN KEY("indicator_id") REFERENCES "indicators"("indicator_id"),
+	PRIMARY KEY("indicator_id","topic_id"),
+	FOREIGN KEY("topic_id") REFERENCES "sap_topics"("topic_id")
 );
 CREATE TABLE IF NOT EXISTS "indicators" (
 	"indicator_id"	INTEGER,
@@ -65,23 +78,10 @@ CREATE TABLE IF NOT EXISTS "indicators" (
 	"additional_info"	TEXT,
 	"is_standard"	TEXT,
 	"indicator_level"	TEXT,
-	"responsible_unit"	INTEGER NOT NULL DEFAULT 1,
+	"responsible_unit"	INTEGER NOT NULL DEFAULT 6,
+	PRIMARY KEY("indicator_id" AUTOINCREMENT),
 	FOREIGN KEY("theme_id") REFERENCES "themes"("theme_id"),
-	FOREIGN KEY("sdg_id") REFERENCES "sdgs"("sdg_id"),
-	PRIMARY KEY("indicator_id" AUTOINCREMENT)
-);
-CREATE TABLE IF NOT EXISTS "sap_topics" (
-	"topic_id"	INTEGER,
-	"topic_name"	TEXT NOT NULL,
-	"topic_cat"	TEXT NOT NULL,
-	PRIMARY KEY("topic_id" AUTOINCREMENT)
-);
-CREATE TABLE IF NOT EXISTS "indicator_saptopics" (
-	"indicator_id"	INTEGER NOT NULL,
-	"topic_id"	INTEGER NOT NULL,
-	FOREIGN KEY("topic_id") REFERENCES "sap_topics"("topic_id"),
-	FOREIGN KEY("indicator_id") REFERENCES "indicators"("indicator_id"),
-	PRIMARY KEY("indicator_id","topic_id")
+	FOREIGN KEY("sdg_id") REFERENCES "sdgs"("sdg_id")
 );
 INSERT INTO "sdgs" ("sdg_id","name","description","url") VALUES ('1','No Poverty','End poverty in all its forms everywhere.','https://sdgs.un.org/goals/goal1');
 INSERT INTO "sdgs" ("sdg_id","name","description","url") VALUES ('1.1','No Poverty','By 2030, eradicate extreme poverty for all people everywhere, currently measured as people living on less than $1.25 a day.','https://sdgs.un.org/goals/goal1');
@@ -398,36 +398,280 @@ INSERT INTO "themes" ("theme_id","name","description","sector_id") VALUES (10,'I
 INSERT INTO "themes" ("theme_id","name","description","sector_id") VALUES (16,'Replication of successful activities','Implemented activities and successes are replicated in other contexts / countries',8);
 INSERT INTO "themes" ("theme_id","name","description","sector_id") VALUES (17,'Capacity development','All activities specifically aimed at building or strengthening the capacities of individuals and institutions',8);
 INSERT INTO "themes" ("theme_id","name","description","sector_id") VALUES (18,'Digital transformation','The process of integrating digital technologies into all aspects of society, businesses, and governance to improve efficiency, accessibility, and innovation, while fostering inclusion and sustainable development.',8);
-INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (1,'GIZ','Deutsche Gesellschaft für Internationale Zusammenarbeit');
-INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (2,'4E20','Digitale Gesellschaft');
-INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (3,'4B40','Wirtschaftspolitik und Privatwirtschaftsförderung');
-INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (4,'4B10','Bildung,Berufliche Bildung,Arbeitsmarkt');
-INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (1,1,'Total number of jobs at enterprise (in FTEs)','Measures the total number of full-time equivalent positions in an enterprise.','FTEs','Gender, age, employment type','Enterprise surveys, administrative records','Providing financial and/or technical support to enterprises can lead to higher job creation.','8.5','https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf','FALSE','Output',3);
-INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (2,2,'Turnover','Reflects the total sales revenue of an enterprise over a given period.','Currency (e.g., USD, EUR)','Sector, region','Financial reports, tax records','Increased turnover indicates improved business operations and market demand.','8.2','https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf','TRUE','Output',3);
-INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (3,2,'Total number of enterprises with improved business operations management','Tracks the number of enterprises implementing better management practices.','Number','Sector, size of enterprise','Interviews, project reports','Improved business operations management boosts efficiency and profitability.','8.3','https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf','FALSE','Output',3);
-INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (4,3,'Total amount of problematic materials reduced in production of goods at enterprise','Measures the reduction of environmentally harmful materials used in production.','Tons','Material type','Enterprise self-reporting, audits','Reducing problematic materials improves sustainability and reduces environmental harm.','12.4','https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf','TRUE','Output',3);
-INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (5,8,'Total amount of private capital mobilized from enterprise for investment in sustainable development','Tracks private investment contributions to sustainability initiatives.','Currency (e.g., USD, EUR)','Sector, type of investment','Financial records, surveys','Mobilizing private capital accelerates progress toward sustainable development.','17.3','https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf','TRUE','Output',3);
-INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (6,5,'Total number of marginalized people benefiting from enterprise operations','Measures the number of marginalized individuals positively impacted by enterprise activities.','Number','Gender, age, group','Beneficiary surveys, reports','Supporting marginalized populations enhances social equity and inclusion.','10.2','https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf','FALSE','Output',3);
-INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (7,8,'Access to financial services','Tracks the number of enterprises or individuals gaining access to financial products or services.','Number','Type of financial service, region','Surveys, administrative data','Improved access to financial services enables business growth and economic inclusion.','8','https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf','TRUE','Output',3);
-INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (8,2,'New products and services','Measures the number of new products or services introduced by enterprises.','Number','Sector, type of product/service','Enterprise reports, market data','Innovation in products and services boosts market competitiveness and consumer satisfaction.','9.5','https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf','FALSE','Output',3);
-INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (9,2,'Formalisation','Tracks the number of informal enterprises transitioning to formal status.','Number','Sector, region','Administrative records, enterprise surveys','Formalisation enhances access to markets, finance, and legal protections.','8.3','https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf','TRUE','Output',3);
-INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (10,2,'Profit (before tax)','Measures the total profit generated by an enterprise before tax deductions.','Currency (e.g., USD, EUR)','Sector, region','Financial reports, tax records','Profitability is a key indicator of business health and sustainability.','8.2','https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf','FALSE','Output',3);
-INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (11,2,'Formalised business relationships','Measures the number of formalized contracts or partnerships established by an enterprise.','Number','Sector, region','Enterprise records, partnership agreements','Formalized relationships enhance business credibility and market access.','8.3','https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf','FALSE','Output',3);
-INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (12,9,'Access to markets','Tracks the number of enterprises or individuals gaining access to local, regional, or international markets.','Number','Market type, region','Market surveys, enterprise reports','Access to markets enables business growth and economic opportunities.','8.a','https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf','TRUE','Output',3);
-INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (13,1,'Jobs created','Measures the total number of jobs created through project interventions.','Number','Gender, age, employment type','Project reports, administrative data','Job creation contributes to economic growth and poverty reduction.','8.5','https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf','TRUE','Output',3);
-INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (14,1,'Additional employment','Measures the number of additional employment opportunities created, beyond initial project goals.','Number','Gender, age, employment type','Enterprise surveys, payroll records','Additional employment strengthens workforce participation and economic stability.','8.5','You can find more information on this indicator here: https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf and here https://unstats.un.org/sdgs/metadata/?Goal=8&Target=8.5','TRUE','Output',3);
-INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (15,5,'Higher income (entrepreneur/employees)','Tracks the increase in income for entrepreneurs and employees resulting from project support.','Currency (e.g., USD, EUR)','Gender, region, sector','Surveys, financial records','Higher income improves living standards and supports economic development.','10.1','https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf','FALSE','Output',3);
-INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (16,9,'Improved working conditions','Measures improvements in workplace safety, facilities, and employment benefits.','Number','Type of improvement, region','Workplace audits, employee surveys','Improved working conditions enhance employee satisfaction and productivity.','8.8','https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf','FALSE','Outcome',3);
-INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (24,16,'Adoption of SDG-Relevant Solutions in Other Countries','This indicator measures the extent to which SDG-relevant solutions developed within a project or program are replicated and applied in other countries. The indicator tracks the transfer and implementation of such solutions beyond their original context, demonstrating scalability and cross-border impact.','Number of countries','Region / continent; SDG goal; type of solution  (policy, technology, business model, capacity-building approach, etc.)','Review of national strategies and action plans in target countries;
-Analysis of policy implementation reports;
-Evaluation of meeting minutes from networking events and conferences;
-Publicly available SDG monitoring reports from national and international sources','If SDG-relevant solutions developed in one country are successfully implemented in other countries, this demonstrates their scalability and effectiveness. The international adoption of solutions fosters regional integration, policy alignment, and knowledge transfer, leading to accelerated progress toward achieving the Sustainable Development Goals (SDGs) on a broader scale.','17','This indicator is not sector-specific and applies to all fields where SDG solutions are developed; 
-Solutions could include policy recommendations, digital innovations, business models, or governance strategies; 
-The adoption of solutions can be fully or partially implemented in new contexts.','FALSE','Outcome',2);
-INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (25,18,'Successful Participation in Pilot Measures for Digital and Entrepreneurial Skills','This indicator measures the number of participants who successfully complete pilot initiatives led by meso-level actors to enhance their digital and entrepreneurial competencies.','Number of participants successfully completing the pilot measures','Gender; type of meso-level actor (e.g., public institution, private sector organization, business association, civil society organization, innovation hub); type of intervention (e.g., training, certification, platform integration)','Analysis of participant lists from the pilot programs; Review of issued certificates; Assessment results from final tests or accreditation processes','If meso-level actors provide structured training and certification programs, participants will improve their digital and entrepreneurial skills, increasing their employability, business success, and economic resilience. Strengthening the capacity of intermediary institutions ensures long-term sustainability in supporting digital transformation and entrepreneurship.','4','','FALSE','Outcome',2);
-INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (26,18,'Development of SDG-Relevant Digital Solutions','This indicator measures the number of digital solutions developed by a dedicated partner, center or initiative that explicitly contribute to the Sustainable Development Goals (SDGs). These solutions may be developed: In collaboration with sector ministries to ensure policy alignment and institutional support; As a result of open innovation competitions, where ideas are sourced from diverse stakeholders.','Number of SDG-relevant digital solutions developed','Ddevelopment approach (e.g., sector ministry collaboration, open competition); Thematic SDG focus (e.g., health, education, climate action); Implementation status (e.g., prototype, pilot stage, fully deployed)','Project documentation reviews; Press releases and public announcements; Minutes from meetings with sector ministries; Records demonstrating SDG alignment; Documentation of open competitions and winning solutions','If digital innovations are developed with a clear SDG focus, they can address critical development challenges more effectively. Engaging sector ministries ensures institutional ownership and scalability, while open innovation competitions foster inclusive participation and diverse problem-solving approaches.','9','Digital solutions can include apps, platforms, data-driven tools, AI-powered systems, and e-governance solutions; Open competitions provide an opportunity for entrepreneurs, civil society, and researchers to contribute innovative ideas.','FALSE','Output',2);
-INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (27,18,'Startups Receiving Financial Support for Business Formation','This indicator measures the number of startups that have received financial support from an incubation or innovation center to establish or expand their business operations. The support aims to enhance entrepreneurial success, business sustainability, and innovation-driven growth.','Number of startups financially supported','Type of financial support (e.g., grants, seed funding, equity investment, subsidized loans); Sector (e.g., technology, agriculture, renewable energy); Startup maturity level (e.g., early-stage, growth-stage); Founder characteristics (e.g., gender, youth-led, minority-led businesses)','Review of financing agreements/contracts between the incubation center and supported startups; Surveys and interviews with funded startups to assess impact and usage of financial support; Financial records and disbursement reports from the incubation center','If startups receive financial support in their early stages, they are more likely to survive, scale, and contribute to economic development. Incubation and innovation centers play a crucial role in providing not only funding but also mentorship, networking, and capacity-building opportunities.','9','Financial support can come in various forms, including grants, soft loans, convertible equity, or performance-based financing. Incubation centers often complement financial support with training, mentoring, and networking opportunities.','FALSE','Output',2);
-INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (28,18,'Innovative Solutions for Digital Awareness and Inclusion','This indicator measures the number of innovative solutions that have been developed and implemented to increase public awareness and digital inclusion, particularly among marginalized groups such as women, for the adoption of digital public services. These solutions should be developed in collaboration with the digital ecosystem and aim to improve accessibility, usability, and engagement.','Number of innovative solutions introduced','Type of solution (e.g., digital literacy platforms, mobile applications, public outreach campaigns, interactive digital kiosks); Target group (e.g., women, rural populations, persons with disabilities); Partnership type (e.g., public-private collaboration, government-led, civil society involvement)','Assessment of the content, functionalities, and accessibility of the innovative solutions; User feedback and engagement metrics (e.g., number of users, completion rates, satisfaction surveys); Documentation and progress reports from implementing partners','If innovative digital solutions are developed and tailored to the needs of marginalized populations, then digital inclusion and awareness will increase, leading to higher adoption of digital public services. This, in turn, can improve access to government services, participation in the digital economy, and social inclusion.','5','The digital ecosystem includes government institutions, private sector actors, civil society organizations, and technology providers that contribute to digital service delivery. Solutions should ensure user-centric design, accessibility standards, and sustainability beyond initial implementation.','FALSE','Output',2);
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (6,'0010','Unternehmensebene');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (7,'0020','Beauftragte auf Unternehmensebene');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (8,'0090','Betriebsrat Eschborn');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (9,'0091','PVA');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (10,'0093','Betriebsrat Bonn');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (11,'0094','Betriebsrat Berlin');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (12,'0095','Gleichstellung');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (13,'0096','Schwerbehindertenvertretung');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (14,'0200','Unternehmenskommunikation');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (15,'0210','Medien- & Öffentlichkeitsarbeit');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (16,'0213','Presse');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (17,'0214','Onlinekommunikation');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (18,'0220','Interne Kommunikation & Beratung');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (19,'0230','Kommunikationsstrategie');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (20,'0250','Kommunikationsberatung');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (21,'0300','Revision');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (22,'0310','Revisionsteam 1');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (23,'0320','Revisionsteam 2');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (24,'0400','Unternehmensentwicklung');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (25,'0410','Unternehmenspolitik und Risikomanagement');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (26,'0411','Grundsätze und Rechenschaftsmanagement');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (27,'0412','Risikomanagement');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (28,'0420','Gremien und strategische Partnerschaften');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (29,'0430','Unternehmensorganisation');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (30,'0431','Organisationsentwicklung');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (31,'0432','Regelwerk und Geschäftsfähigkeit');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (32,'0450','Repräsentanz Berlin');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (33,'0470','Repräsentanz Brüssel');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (34,'0480','Qualität und Nachhaltigkeit');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (35,'0490','Transformationsmanagement');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (36,'0500','Recht und Versicherung');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (37,'05A0','Recht 1');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (38,'05B0','Recht 2');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (39,'0800','Evaluierung');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (40,'0810','USE, Evaluierungsberatung');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (41,'0820','Zentrale Projektevaluierungen');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (42,'0B00','Akademie für Int. Zusammenarbeit (AIZ)');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (43,'0B10','Kundenservice und Kommunikation');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (44,'0B30','Portfolio + Lerninnovation');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (45,'0B40','Learning Center 1');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (46,'0B50','Learning Center 2');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (47,'0B60','Learning Center 3');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (48,'0B70','Kompetenzentwicklung/Berufliche Bildung');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (49,'0B80','Tagungsmanagement Campus Kottenforst');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (50,'0B90','Digitale Transformation und Lernsysteme');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (51,'0C00','Governance, Risk, Compliance');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (52,'0C10','Compl. u. Integritätsberat., Fallmgmt.');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (53,'0C20','GRC-Managementsysteme');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (54,'0D00','Unternehmenssicherheit');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (55,'0D10','Sicherheitsrisiko- und Krisenmanagement');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (56,'0I00','Information Governance');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (57,'1000','Afrika');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (58,'1015','Bereichsprozesse');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (59,'1100','Westafrika 1');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (60,'1300','Südliches Afrika');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (61,'1400','Zentralafrika');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (62,'1500','Ostafrika');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (63,'1600','Westafrika 2, Madagaskar');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (64,'1700','Afrika Überregional und Horn von Afrika');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (65,'1710','Regionale Vorhaben Afrika 1');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (66,'1720','Regionale Vorhaben Afrika 2');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (67,'1730','Digitale Transformation in Afrika');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (68,'1740','Afrikanische Union');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (69,'2000','Asien, Pazifik, Lateinamerika, Karibik');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (70,'2A00','Asien I');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (71,'2B00','Asien II');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (72,'2B10','Bangladesch, Pakistan');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (73,'2B20','Afghanistan');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (74,'2C00','Lateinamerika, Karibik');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (75,'2C10','Länderübergreifd. Ansätze und Qualität');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (76,'2D00','Themen & Leistungen,Portfolioentwicklung');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (77,'2D10','Bereichsübergr. digit.Auftragsmanagement');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (78,'2D20','Klimakoordination APLAK');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (79,'3000','Europa, Mittelmeer, Zentralasien');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (80,'3010','Bereichskoordination');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (81,'3300','Naher und Mittlerer Osten 1');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (82,'3600','Nordafrika');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (83,'3700','Westbalkan, Zentralasien, Osteuropa');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (84,'3710','Auftraggeberprozesse und Qualität');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (85,'3900','Deutschland, Europa, Südkaukasus');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (86,'3910','Region West');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (87,'3920','Region Süd');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (88,'3930','Region Ost');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (89,'3940','Region Nord');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (90,'3950','Sonderprogr.Ukraine/länderübergr.Aufg.');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (91,'3A00','Naher und Mittlerer Osten 2');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (92,'4000','[FMB] Fach- und Methodenbereich');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (93,'4A00','[FMB] Portal für Interne Kunden');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (94,'4A10','[FMB] Qualitätsprüfung Angebote, Koord. Arb.au');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (95,'4A20','[FMB] Flexibles Operatives Einsatzteam');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (96,'4A30','[FMB] Safeguards und Gender Managementsystem');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (97,'4A40','[FMB] Werksteam 1');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (98,'4A50','[FMB] Werksteam 2');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (99,'4A60','[FMB] Werksteam 3');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (100,'4B00','[FMB] Wirtschaft,Beschäftigung,soziale Entwicklung');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (101,'4B10','[FMB] Bildung,Berufliche Bildung,Arbeitsmarkt');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (102,'4B20','[FMB] Finanzsystementwicklung, Versicherungen');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (103,'4B30','[FMB] Gesundheit und Soziale Sicherung');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (104,'4B40','[FMB] Wirtschaftspolitik und Privatwirtförderung');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (105,'4C00','[FMB] Governance und Konflikt');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (106,'4C10','[FMB] Rechtsstaat, Gender, Sicherheit');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (107,'4C20','[FMB] Öffentliche Finanzen und Verwaltung');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (108,'4C30','[FMB] Demokratie, Digital Governance, Stadt');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (109,'4C40','[FMB] Krisenbewältigung und Friedensförderung');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (110,'4D00','[FMB] Klima, ländl. Entwicklung, Infrastruktur');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (111,'4D10','[FMB] Klimawandel');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (112,'4D20','[FMB] Wald, Biodiversität, Landwirtschaft');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (113,'4D30','[FMB] Ländl. Entwicklung, Ernährungssicherung');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (114,'4D40','[FMB] Wasser, Abwasser, Abfall');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (115,'4D50','[FMB] Energie und Verkehr');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (116,'4D60','[FMB] Umwelt');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (117,'4E00','[FMB] Methoden, digitale Transform, Innovation');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (118,'4E10','[FMB] Veränderungsmanagement');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (119,'4E20','[FMB] Digitale Gesellschaft');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (120,'4E30','[FMB] Innovation, Lernen, Wissen');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (121,'5000','Finanzen');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (122,'5010','Bereichskoordination');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (123,'5100','Unternehmenscontrolling');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (124,'5110','Gemeinkosten,Drittmittel,Wirtschaftlichk');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (125,'5120','Titelsteuerung und Auftragscontrolling');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (126,'5200','Rechnungswesen und Steuern');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (127,'5210','Externes Rechnungswesen und Steuern');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (128,'5220','Internes Rechnungswesen');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (129,'5240','Kreditorenbuchhaltung');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (130,'5250','Finanzdisposition und Zahlungsverkehr');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (131,'5260','Projektbuchhaltung');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (132,'5270','Fachliche Systemkoordination');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (133,'5600','Beratung Finanzmanagement');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (134,'5610','Auftraggeber- und Geschäftsentwicklung');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (135,'5620','Sektor- und Globalvorhaben');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (136,'5630','Afrika');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (137,'5640','Asien, Lateinamerika, Karibik');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (138,'5650','Europa, Mittelmeer, Zentralasien');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (139,'5660','Kalkulation');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (140,'5700','Service Finanzen');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (141,'5720','Finanzielle Vertragsabwicklung 1');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (142,'5730','Finanzielle Vertragsabwicklung 2');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (143,'5740','Auftragsabrechnung, Prüfungskoordination');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (144,'5750','Finanzielle Vertragsabwicklung 3');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (145,'6000','Personal');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (146,'6060','Koordination und Controlling');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (147,'6200','HR-Competence');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (148,'6210','HRStrategy,Compensation&Labour Relations');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (149,'6220','Personal- und Karriereentwicklung');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (150,'6240','EntwicklungshelferInnen');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (151,'6270','HR Digital und Innovation');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (152,'6500','Gesundheitsservices');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (153,'6520','COPE');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (154,'6530','Assistenz Medizinischer Dienst');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (155,'6600','HR-Solutions');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (156,'6610','HR Planning and Development');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (157,'6620','HR-Partner');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (158,'6630','Regionale HR-Hubs');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (159,'6640','Nachwuchsprogramme');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (160,'6641','Betriebliche Ausbildung');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (161,'6642','Einstiegsqualifikanten');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (162,'6643','EZ-Trainees');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (163,'6644','Kaufmännische Trainees');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (164,'6900','HR-Services');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (165,'69A0','HR-Service Center');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (166,'69B0','Einsatzmanagement');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (167,'69C0','Rekrutierung - Interner Arbeitsmarkt');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (168,'69D0','Rekrutierung - Externer Arbeitsmarkt');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (169,'69E0','Arbeitsvertragsmanagement Inland');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (170,'69F0','Arbeitsvertragsmanagement Ausland');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (171,'69G0','Krise, Recht und Sonderthemen');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (172,'69H0','Arbeitsvertragsänderung und -leistungen');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (173,'69I0','HR-Global');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (174,'69K0','EH / IF Betreuung und Abrechnung');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (175,'69L0','Gehalt 1');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (176,'69M0','Gehalt 2');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (177,'69N0','Sozialwesen und Steuern');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (178,'69P0','Rekrutierung - Führungskräfte');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (179,'69Q0','Zeitmanagement und Gehalt');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (180,'7000','International Services');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (181,'7100','Operations');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (182,'7110','Europa, Mittelmeer, Zentralasien (EMZ)');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (183,'7130','Afrika');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (184,'7140','Asien, Pazifik, Lateinamerika, Karibik');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (185,'7160','Sonstige Projekte');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (186,'7180','Märkte und Kunden');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (187,'7800','Finanzen und Personal');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (188,'7810','Finanzen');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (189,'7820','Verträge und Recht');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (190,'7830','Personal');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (191,'A000','Auftraggeber und Geschäftsentwicklung');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (192,'A100','Auftraggeber');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (193,'A101','Verbindungsbüro BMZ');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (194,'A110','VB AA, BMI, BMJ, BMVg, BMWSB');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (195,'A120','Verbindungsbüro BMEL, BMUV');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (196,'A130','VB BMWK,BMF,BMAS,BMBF,BMDV,BMFSFJ,BMG');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (197,'A140','Verbindungsbüro EU');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (198,'A150','Verbindungsbüro Internationale Geber');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (199,'A160','Verbindungsbüro Green Climate Fund');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (200,'A170','VB Unternehmen und Stiftungen');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (201,'A200','Geschäftsentwicklung');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (202,'A220','Geschäftsentwicklung 1');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (203,'A230','Geschäftsentwicklung 2');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (204,'A300','Verw.- u. Projektdienstleistungen der IZ');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (205,'D000','Digitale Transformation und IT Solutions');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (206,'D010','Bereichscontrolling');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (207,'D020','Bereichskoordination');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (208,'D100','Projekt- und Portfoliomanagement');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (209,'D110','IT Beratung');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (210,'D120','Digital Change und Ressourcen');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (211,'D130','Digitalportfoliostrategie u. -governance');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (212,'D200','IT Entwicklung');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (213,'D210','IT Solutions Finanzen');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (214,'D220','IT Solutions Auftrag und Beschaffung');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (215,'D230','IT Solutions Personal');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (216,'D240','IT Solutions Cross Application');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (217,'D250','IT-Solutions Web-u.Individualanwendungen');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (218,'D300','Betrieb');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (219,'D310','Basis Infrastruktur');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (220,'D320','Digitaler Arbeitsplatz-Cloud Services 1');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (221,'D330','Identitätsmanagement und Cyber Security');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (222,'D340','Digitaler Arbeitsplatz-Cloud Services 2');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (223,'D360','Digitaler Arbeitsplatz - Clients');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (224,'D370','Cloud Infrastruktur');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (225,'D400','Global IT Services');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (226,'D420','IT Service Center');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (227,'D440','Glob. Unterstützung IT & Dig. Netzwerke');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (228,'D450','Identitäts- und Accessmanagement');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (229,'D500','Informationssicherheit und Datenschutz');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (230,'D510','Informationssicherheitsmanagement');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (231,'D520','Datenschutzmanagement');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (232,'E000','ELVIS');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (233,'E010','Sprachendienst');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (234,'E200','Einkauf und Verträge');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (235,'E210','Sachgüter 1');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (236,'E220','Sachgüter 2');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (237,'E230','Digitalisierung, Compliance und Support');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (238,'E240','Controlling, Wissen, Prüfung und ZAB');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (239,'E250','Dienstleistungen Unterschwelle 1');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (240,'E260','Dienstleistungen Unterschwelle 2');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (241,'E270','Dienstleistungen Unterschwelle 3');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (242,'E280','Dienstleistungen Unterschwelle 4');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (243,'E290','Dienstleistungen Unterschwelle 5');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (244,'E2A0','Dienstleistungen Oberschwelle und IT');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (245,'E2B0','Finanzierungen');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (246,'E2D0','Dienstl. Unterschwelle 6 und Bauverträge');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (247,'E300','Liegenschaften 1');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (248,'E310','LM Bad Honnef, Röttgen');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (249,'E350','LM Feldafing');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (250,'E380','LM Bonn (Kommunikation und Services)');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (251,'E390','LM Bonn (Flächen- und Gebäudemgmt)');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (252,'E400','Liegenschaften 2');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (253,'E410','LM Eschborn (Kommunikation und Services)');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (254,'E420','LM Eschborn (Flächen- und Gebäudemgmt)');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (255,'E450','Kfm. DL u. Digitalisierung LM');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (256,'E460','LM Berlin Komm. u. Service, Flächen-Geb');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (257,'G000','Sektor- und Globalvorhaben');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (258,'G020','Auftragsmanagement & Digitalisierung');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (259,'G100','Wirtschaft, Soziales, Digitalisierung');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (260,'G110','Gesundheit, Bildung, Soziales');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (261,'G120','Nachhaltige Wirtschentw, Digitalisierung');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (262,'G130','Zusammenarbeit mit der Wirtschaft');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (263,'G200','Krisen-u.Konfliktmanagmt,Migration,Bauen');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (264,'G210','Flucht, Migration, Rückkehr');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (265,'G220','Frieden und Sicherheit');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (266,'G230','Bauen in der IZ');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (267,'G260','Übergangshilfe');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (268,'G300','Klima, Umwelt, Infrastruktur');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (269,'G310','Energie, Wasser, Verkehr');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (270,'G320','Klima und Klimapolitik');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (271,'G330','Umweltpolitik, Biodiversität, Wald');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (272,'G400','Global Policy, Governance');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (273,'G410','Global Policy');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (274,'G420','Governance, Menschenrechte');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (275,'G430','Cities');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (276,'G500','Ländliche Entwicklung, Agrarwirtschaft');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (277,'G510','Wertschöpfung, Innovation');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (278,'G520','Ländliche Entwicklung');
+INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (279,'G530','Globale Agenden für Ernährungssicherung');
 INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (1,'Abfall- und Kreislaufwirtschaft, Ressourceneffizienz','Fach-TOPIC');
 INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (2,'Agenda 2030','Fach-TOPIC');
 INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (3,'Agrarbasierte Wirtschaftsentwicklung','Fach-TOPIC');
@@ -531,4 +775,30 @@ INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (27,31);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (28,15);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (28,16);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (28,21);
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (1,1,'Total number of jobs at enterprise (in FTEs)','Measures the total number of full-time equivalent positions in an enterprise.','FTEs','Gender, age, employment type','Enterprise surveys, administrative records','Providing financial and/or technical support to enterprises can lead to higher job creation.','8.5','https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf','FALSE','Output',104);
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (2,2,'Turnover','Reflects the total sales revenue of an enterprise over a given period.','Currency (e.g., USD, EUR)','Sector, region','Financial reports, tax records','Increased turnover indicates improved business operations and market demand.','8.2','https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf','TRUE','Output',104);
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (3,2,'Total number of enterprises with improved business operations management','Tracks the number of enterprises implementing better management practices.','Number','Sector, size of enterprise','Interviews, project reports','Improved business operations management boosts efficiency and profitability.','8.3','https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf','FALSE','Output',104);
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (4,3,'Total amount of problematic materials reduced in production of goods at enterprise','Measures the reduction of environmentally harmful materials used in production.','Tons','Material type','Enterprise self-reporting, audits','Reducing problematic materials improves sustainability and reduces environmental harm.','12.4','https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf','TRUE','Output',104);
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (5,8,'Total amount of private capital mobilized from enterprise for investment in sustainable development','Tracks private investment contributions to sustainability initiatives.','Currency (e.g., USD, EUR)','Sector, type of investment','Financial records, surveys','Mobilizing private capital accelerates progress toward sustainable development.','17.3','https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf','TRUE','Output',104);
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (6,5,'Total number of marginalized people benefiting from enterprise operations','Measures the number of marginalized individuals positively impacted by enterprise activities.','Number','Gender, age, group','Beneficiary surveys, reports','Supporting marginalized populations enhances social equity and inclusion.','10.2','https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf','FALSE','Output',104);
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (7,8,'Access to financial services','Tracks the number of enterprises or individuals gaining access to financial products or services.','Number','Type of financial service, region','Surveys, administrative data','Improved access to financial services enables business growth and economic inclusion.','8','https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf','TRUE','Output',104);
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (8,2,'New products and services','Measures the number of new products or services introduced by enterprises.','Number','Sector, type of product/service','Enterprise reports, market data','Innovation in products and services boosts market competitiveness and consumer satisfaction.','9.5','https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf','FALSE','Output',104);
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (9,2,'Formalisation','Tracks the number of informal enterprises transitioning to formal status.','Number','Sector, region','Administrative records, enterprise surveys','Formalisation enhances access to markets, finance, and legal protections.','8.3','https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf','TRUE','Output',104);
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (10,2,'Profit (before tax)','Measures the total profit generated by an enterprise before tax deductions.','Currency (e.g., USD, EUR)','Sector, region','Financial reports, tax records','Profitability is a key indicator of business health and sustainability.','8.2','https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf','FALSE','Output',104);
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (11,2,'Formalised business relationships','Measures the number of formalized contracts or partnerships established by an enterprise.','Number','Sector, region','Enterprise records, partnership agreements','Formalized relationships enhance business credibility and market access.','8.3','https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf','FALSE','Output',104);
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (12,9,'Access to markets','Tracks the number of enterprises or individuals gaining access to local, regional, or international markets.','Number','Market type, region','Market surveys, enterprise reports','Access to markets enables business growth and economic opportunities.','8.a','https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf','TRUE','Output',104);
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (13,1,'Jobs created','Measures the total number of jobs created through project interventions.','Number','Gender, age, employment type','Project reports, administrative data','Job creation contributes to economic growth and poverty reduction.','8.5','https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf','TRUE','Output',104);
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (14,1,'Additional employment','Measures the number of additional employment opportunities created, beyond initial project goals.','Number','Gender, age, employment type','Enterprise surveys, payroll records','Additional employment strengthens workforce participation and economic stability.','8.5','You can find more information on this indicator here: https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf and here https://unstats.un.org/sdgs/metadata/?Goal=8&Target=8.5','TRUE','Output',104);
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (15,5,'Higher income (entrepreneur/employees)','Tracks the increase in income for entrepreneurs and employees resulting from project support.','Currency (e.g., USD, EUR)','Gender, region, sector','Surveys, financial records','Higher income improves living standards and supports economic development.','10.1','https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf','FALSE','Output',104);
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (16,9,'Improved working conditions','Measures improvements in workplace safety, facilities, and employment benefits.','Number','Type of improvement, region','Workplace audits, employee surveys','Improved working conditions enhance employee satisfaction and productivity.','8.8','https://agenda2030giz-guide.de/files/giz/Dokumente/Durchfuehrung/20019-giz-en-Orientation%20paper_Guidelines%20for%20monitoring%20and%20evaluation%20in%20the%20context%20of%202030%20Agenda.pdf','FALSE','Outcome',104);
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (24,16,'Adoption of SDG-Relevant Solutions in Other Countries','This indicator measures the extent to which SDG-relevant solutions developed within a project or program are replicated and applied in other countries. The indicator tracks the transfer and implementation of such solutions beyond their original context, demonstrating scalability and cross-border impact.','Number of countries','Region / continent; SDG goal; type of solution  (policy, technology, business model, capacity-building approach, etc.)','Review of national strategies and action plans in target countries;
+Analysis of policy implementation reports;
+Evaluation of meeting minutes from networking events and conferences;
+Publicly available SDG monitoring reports from national and international sources','If SDG-relevant solutions developed in one country are successfully implemented in other countries, this demonstrates their scalability and effectiveness. The international adoption of solutions fosters regional integration, policy alignment, and knowledge transfer, leading to accelerated progress toward achieving the Sustainable Development Goals (SDGs) on a broader scale.','17','This indicator is not sector-specific and applies to all fields where SDG solutions are developed; 
+Solutions could include policy recommendations, digital innovations, business models, or governance strategies; 
+The adoption of solutions can be fully or partially implemented in new contexts.','FALSE','Outcome',119);
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (25,18,'Successful Participation in Pilot Measures for Digital and Entrepreneurial Skills','This indicator measures the number of participants who successfully complete pilot initiatives led by meso-level actors to enhance their digital and entrepreneurial competencies.','Number of participants successfully completing the pilot measures','Gender; type of meso-level actor (e.g., public institution, private sector organization, business association, civil society organization, innovation hub); type of intervention (e.g., training, certification, platform integration)','Analysis of participant lists from the pilot programs; Review of issued certificates; Assessment results from final tests or accreditation processes','If meso-level actors provide structured training and certification programs, participants will improve their digital and entrepreneurial skills, increasing their employability, business success, and economic resilience. Strengthening the capacity of intermediary institutions ensures long-term sustainability in supporting digital transformation and entrepreneurship.','4','','FALSE','Outcome',119);
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (26,18,'Development of SDG-Relevant Digital Solutions','This indicator measures the number of digital solutions developed by a dedicated partner, center or initiative that explicitly contribute to the Sustainable Development Goals (SDGs). These solutions may be developed: In collaboration with sector ministries to ensure policy alignment and institutional support; As a result of open innovation competitions, where ideas are sourced from diverse stakeholders.','Number of SDG-relevant digital solutions developed','Ddevelopment approach (e.g., sector ministry collaboration, open competition); Thematic SDG focus (e.g., health, education, climate action); Implementation status (e.g., prototype, pilot stage, fully deployed)','Project documentation reviews; Press releases and public announcements; Minutes from meetings with sector ministries; Records demonstrating SDG alignment; Documentation of open competitions and winning solutions','If digital innovations are developed with a clear SDG focus, they can address critical development challenges more effectively. Engaging sector ministries ensures institutional ownership and scalability, while open innovation competitions foster inclusive participation and diverse problem-solving approaches.','9','Digital solutions can include apps, platforms, data-driven tools, AI-powered systems, and e-governance solutions; Open competitions provide an opportunity for entrepreneurs, civil society, and researchers to contribute innovative ideas.','FALSE','Output',119);
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (27,18,'Startups Receiving Financial Support for Business Formation','This indicator measures the number of startups that have received financial support from an incubation or innovation center to establish or expand their business operations. The support aims to enhance entrepreneurial success, business sustainability, and innovation-driven growth.','Number of startups financially supported','Type of financial support (e.g., grants, seed funding, equity investment, subsidized loans); Sector (e.g., technology, agriculture, renewable energy); Startup maturity level (e.g., early-stage, growth-stage); Founder characteristics (e.g., gender, youth-led, minority-led businesses)','Review of financing agreements/contracts between the incubation center and supported startups; Surveys and interviews with funded startups to assess impact and usage of financial support; Financial records and disbursement reports from the incubation center','If startups receive financial support in their early stages, they are more likely to survive, scale, and contribute to economic development. Incubation and innovation centers play a crucial role in providing not only funding but also mentorship, networking, and capacity-building opportunities.','9','Financial support can come in various forms, including grants, soft loans, convertible equity, or performance-based financing. Incubation centers often complement financial support with training, mentoring, and networking opportunities.','FALSE','Output',119);
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (28,18,'Innovative Solutions for Digital Awareness and Inclusion','This indicator measures the number of innovative solutions that have been developed and implemented to increase public awareness and digital inclusion, particularly among marginalized groups such as women, for the adoption of digital public services. These solutions should be developed in collaboration with the digital ecosystem and aim to improve accessibility, usability, and engagement.','Number of innovative solutions introduced','Type of solution (e.g., digital literacy platforms, mobile applications, public outreach campaigns, interactive digital kiosks); Target group (e.g., women, rural populations, persons with disabilities); Partnership type (e.g., public-private collaboration, government-led, civil society involvement)','Assessment of the content, functionalities, and accessibility of the innovative solutions; User feedback and engagement metrics (e.g., number of users, completion rates, satisfaction surveys); Documentation and progress reports from implementing partners','If innovative digital solutions are developed and tailored to the needs of marginalized populations, then digital inclusion and awareness will increase, leading to higher adoption of digital public services. This, in turn, can improve access to government services, participation in the digital economy, and social inclusion.','5','The digital ecosystem includes government institutions, private sector actors, civil society organizations, and technology providers that contribute to digital service delivery. Solutions should ensure user-centric design, accessibility standards, and sustainability beyond initial implementation.','FALSE','Output',119);
 COMMIT;

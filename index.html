@@ -66,13 +66,13 @@
       font-size: 1.2em;
       margin-left: 10px;
     }
-    .concept, .package, .responsible-unit, .sdg, .typical-level {
+    .concept, .package, .responsible-unit, .sdg, .typical-level, .sap-topic {
       font-size: 0.9em;
       color: #555;
       cursor: help;
     }
 
-    .concept:hover, .package:hover, .responsible-unit:hover, .sdg:hover, .typical-level:hover {
+    .concept:hover, .package:hover, .responsible-unit:hover, .sdg:hover, .typical-level:hover, .sap-topic:hover {
       text-decoration: underline;
     }
 
@@ -349,12 +349,21 @@ function displayIndicatorsByThemeAndSector(indicators, expandByDefault = false) 
               <span class="filter-icon" title="Display all indicators using the concept '${concept.name}'" data-type="concept" data-name="${concept.name}" onclick="event.stopPropagation(); filterIndicatorsBy('concept', '${concept.name}')">🔍</span>
             `).join(', ')}
           </p>
-          <p><strong>Packages:</strong> 
+          <p><strong>Standard Packages:</strong> 
             ${indicator.packages.map(package => `
               <span class="package" title="${package.definition}"">${package.name}</span>
               <span class="filter-icon" title="Display all indicators used by the package '${package.name}'" data-type="package" data-name="${package.name}" onclick="event.stopPropagation(); filterIndicatorsBy('package', '${package.name}')">🔍</span>
             `).join(', ')}
           </p>
+          
+            <p><strong>SAP Topics:</strong>
+            ${[...new Set(indicator.sap_topics.split('||'))].map(topic => `
+              <span class="sap-topic" title='⚠️ Those topics are a work-in-progress (not yet finalized) SAP-standard within GIZ ⚠️' onclick="event.stopPropagation()">${topic}</span>
+              <span class="filter-icon" title="Display all indicators related to '${topic}'" data-type="sap_topic" data-name="${topic}" onclick="event.stopPropagation(); filterIndicatorsBy('sap_topic', '${topic}')">🔍</span>
+            `).join(', ')}<span style="color: red; font-weight: bold;">‼️BETA‼️</span>
+            </p>
+          
+          
           <p><strong>Is standard indicator?</strong> ${indicator.is_standard}</p>
           <p><strong>Additional info:</strong> 
             ${indicator.additional_info 
@@ -460,6 +469,10 @@ function displayIndicatorsByThemeAndSector(indicators, expandByDefault = false) 
         filteredIndicators = allIndicators.filter(indicator =>
           indicator.sdg_id === name
         );
+      } else if (type === 'sap_topic') {
+        filteredIndicators = allIndicators.filter(indicator =>
+          indicator.sap_topics.includes(name)
+        );
       }
 
       displayIndicatorsByThemeAndSector(filteredIndicators);
@@ -471,7 +484,8 @@ function displayIndicatorsByThemeAndSector(indicators, expandByDefault = false) 
           type === 'package' ? 'Package' : 
           type === 'responsible_unit' ? 'Responsible Unit' : 
           type === 'typical_level' ? 'Typical Level' : 
-          'SDG'}: "${name}"`,
+          type === 'sdg' ? 'SDG' :
+          'SAP Topic'}: "${name}"`,
         filteredIndicators
       );
     }

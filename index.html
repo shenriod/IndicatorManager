@@ -372,7 +372,7 @@ function displayIndicatorsByThemeAndSector(indicators, expandByDefault = false) 
             </p>
           
           
-          <p><strong>Is standard indicator?</strong> ${indicator.is_standard}</p>
+          <p><strong>Is BMZ standard indicator?</strong> ${indicator.is_standard}</p>
           <p><strong>Additional info:</strong> 
             ${indicator.additional_info 
               ? formatUrlsAsLinks(indicator.additional_info).replace(/<a /g, '<a onclick="event.stopPropagation()" ')
@@ -606,41 +606,48 @@ function displayIndicatorsByThemeAndSector(indicators, expandByDefault = false) 
       displayIndicatorsByThemeAndSector(allIndicators, false);
     }
 
-    function exportSelectedIndicators() {
-      if (selectedIndicators.size === 0) {
-        alert('No indicators selected to export!');
-        return;
-      }
-
-      // Create CSV header
-      let csvContent = 'ID,Name,Definition,Unit of Measurement,Disaggregation,Data Collection Method,Underlying Theory of Change,SDG,Sector,Theme,Concepts,Packages,Additional Info\n';
-
-      // Add selected indicators data
-      selectedIndicators.forEach((name, id) => {
-        const indicator = allIndicators.find(ind => ind.indicator_id === id);
-
-        if (indicator) {
-          const concepts = indicator.concepts.map(c => c.name).join('; ');
-          const packages = indicator.packages.map(p => p.name).join('; ');
-
-          // Format SDG with ID, name, and description
-          const formattedSDG = `${indicator.sdg_id} - ${indicator.sdg_name} - ${indicator.sdg_description} - ${indicator.sdg_url}`;
-
-          csvContent += `"${indicator.indicator_id}","${indicator.name}","${indicator.definition}","${indicator.unit_of_measurement}","${indicator.disaggregation}","${indicator.data_collection_method}","${indicator.underlying_theory_of_change}","${formattedSDG}","${indicator.sectors}","${indicator.theme_name}","${concepts}","${packages}","${indicator.additional_info || ''}"\n`;
-        }
-      });
-
-      // Create a blob and trigger download
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.setAttribute('href', url);
-      link.setAttribute('download', 'selected_indicators.csv');
-      link.style.display = 'none';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+  function exportSelectedIndicators() {
+    if (selectedIndicators.size === 0) {
+      alert('No indicators selected to export!');
+      return;
     }
+
+    // Create CSV header (même ordre que la requête SQL)
+    let csvContent = 'ID,Name,Definition,Sector,Sector Description,Theme,Theme Description,Unit of Measurement,Disaggregation,Data Collection Method,Underlying Theory of Change,Indicator Level,Additional Info,Is Standard,SDG Name,SDG ID,SDG Description,SDG URL,Concepts,Packages,SAP Topics,Responsible Unit Shortname,Responsible Unit Longname\n';
+
+    // Add selected indicators data
+    selectedIndicators.forEach((name, id) => {
+      const indicator = allIndicators.find(ind => ind.indicator_id === id);
+
+      if (indicator) {
+        // Extraction correcte des concepts et packages sous forme de tableau d'objets
+        const concepts = Array.isArray(indicator.concepts) ? 
+          indicator.concepts.map(c => c.name).join('; ') : '-';
+
+        const packages = Array.isArray(indicator.packages) ? 
+          indicator.packages.map(p => p.name).join('; ') : '-';
+
+        // SAP Topics semble être une chaîne de caractères, donc on applique split('||')
+        const sapTopics = typeof indicator.sap_topics === 'string' ? 
+          indicator.sap_topics.split('||').join('; ') : '-';
+
+        csvContent += `"${indicator.indicator_id}","${indicator.name}","${indicator.definition}","${indicator.sectors}","${indicator.sectors_description}","${indicator.theme_name}","${indicator.theme_description}","${indicator.unit_of_measurement}","${indicator.disaggregation}","${indicator.data_collection_method}","${indicator.underlying_theory_of_change}","${indicator.indicator_level}","${indicator.additional_info || '-'}","${indicator.is_standard}","${indicator.sdg_name}","${indicator.sdg_id}","${indicator.sdg_description}","${indicator.sdg_url}","${concepts}","${packages}","${sapTopics}","${indicator.unit_shortname}","${indicator.unit_longname}"\n`;
+      }
+    });
+
+    // Create a blob and trigger download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'selected_indicators.csv');
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+
 
         
     function deselectAllIndicators() {

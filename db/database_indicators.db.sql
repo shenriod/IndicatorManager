@@ -27,8 +27,8 @@ CREATE TABLE IF NOT EXISTS "sectors" (
 CREATE TABLE IF NOT EXISTS "indicator_concepts" (
 	"indicator_id"	INTEGER NOT NULL,
 	"concept_id"	INTEGER NOT NULL,
-	FOREIGN KEY("indicator_id") REFERENCES "indicators"("indicator_id"),
 	FOREIGN KEY("concept_id") REFERENCES "key_concepts"("concept_id"),
+	FOREIGN KEY("indicator_id") REFERENCES "indicators"("indicator_id"),
 	PRIMARY KEY("indicator_id","concept_id")
 );
 CREATE TABLE IF NOT EXISTS "indicator_packages" (
@@ -69,6 +69,19 @@ CREATE TABLE IF NOT EXISTS "indicators" (
 	FOREIGN KEY("theme_id") REFERENCES "themes"("theme_id"),
 	FOREIGN KEY("sdg_id") REFERENCES "sdgs"("sdg_id"),
 	PRIMARY KEY("indicator_id" AUTOINCREMENT)
+);
+CREATE TABLE IF NOT EXISTS "sap_topics" (
+	"topic_id"	INTEGER,
+	"topic_name"	TEXT NOT NULL,
+	"topic_cat"	TEXT NOT NULL,
+	PRIMARY KEY("topic_id" AUTOINCREMENT)
+);
+CREATE TABLE IF NOT EXISTS "indicator_saptopics" (
+	"indicator_id"	INTEGER NOT NULL,
+	"topic_id"	INTEGER NOT NULL,
+	FOREIGN KEY("topic_id") REFERENCES "sap_topics"("topic_id"),
+	FOREIGN KEY("indicator_id") REFERENCES "indicators"("indicator_id"),
+	PRIMARY KEY("indicator_id","topic_id")
 );
 INSERT INTO "sdgs" ("sdg_id","name","description","url") VALUES ('1','No Poverty','End poverty in all its forms everywhere.','https://sdgs.un.org/goals/goal1');
 INSERT INTO "sdgs" ("sdg_id","name","description","url") VALUES ('1.1','No Poverty','By 2030, eradicate extreme poverty for all people everywhere, currently measured as people living on less than $1.25 a day.','https://sdgs.un.org/goals/goal1');
@@ -415,4 +428,107 @@ INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of
 INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (26,18,'Development of SDG-Relevant Digital Solutions','This indicator measures the number of digital solutions developed by a dedicated partner, center or initiative that explicitly contribute to the Sustainable Development Goals (SDGs). These solutions may be developed: In collaboration with sector ministries to ensure policy alignment and institutional support; As a result of open innovation competitions, where ideas are sourced from diverse stakeholders.','Number of SDG-relevant digital solutions developed','Ddevelopment approach (e.g., sector ministry collaboration, open competition); Thematic SDG focus (e.g., health, education, climate action); Implementation status (e.g., prototype, pilot stage, fully deployed)','Project documentation reviews; Press releases and public announcements; Minutes from meetings with sector ministries; Records demonstrating SDG alignment; Documentation of open competitions and winning solutions','If digital innovations are developed with a clear SDG focus, they can address critical development challenges more effectively. Engaging sector ministries ensures institutional ownership and scalability, while open innovation competitions foster inclusive participation and diverse problem-solving approaches.','9','Digital solutions can include apps, platforms, data-driven tools, AI-powered systems, and e-governance solutions; Open competitions provide an opportunity for entrepreneurs, civil society, and researchers to contribute innovative ideas.','FALSE','Output',2);
 INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (27,18,'Startups Receiving Financial Support for Business Formation','This indicator measures the number of startups that have received financial support from an incubation or innovation center to establish or expand their business operations. The support aims to enhance entrepreneurial success, business sustainability, and innovation-driven growth.','Number of startups financially supported','Type of financial support (e.g., grants, seed funding, equity investment, subsidized loans); Sector (e.g., technology, agriculture, renewable energy); Startup maturity level (e.g., early-stage, growth-stage); Founder characteristics (e.g., gender, youth-led, minority-led businesses)','Review of financing agreements/contracts between the incubation center and supported startups; Surveys and interviews with funded startups to assess impact and usage of financial support; Financial records and disbursement reports from the incubation center','If startups receive financial support in their early stages, they are more likely to survive, scale, and contribute to economic development. Incubation and innovation centers play a crucial role in providing not only funding but also mentorship, networking, and capacity-building opportunities.','9','Financial support can come in various forms, including grants, soft loans, convertible equity, or performance-based financing. Incubation centers often complement financial support with training, mentoring, and networking opportunities.','FALSE','Output',2);
 INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (28,18,'Innovative Solutions for Digital Awareness and Inclusion','This indicator measures the number of innovative solutions that have been developed and implemented to increase public awareness and digital inclusion, particularly among marginalized groups such as women, for the adoption of digital public services. These solutions should be developed in collaboration with the digital ecosystem and aim to improve accessibility, usability, and engagement.','Number of innovative solutions introduced','Type of solution (e.g., digital literacy platforms, mobile applications, public outreach campaigns, interactive digital kiosks); Target group (e.g., women, rural populations, persons with disabilities); Partnership type (e.g., public-private collaboration, government-led, civil society involvement)','Assessment of the content, functionalities, and accessibility of the innovative solutions; User feedback and engagement metrics (e.g., number of users, completion rates, satisfaction surveys); Documentation and progress reports from implementing partners','If innovative digital solutions are developed and tailored to the needs of marginalized populations, then digital inclusion and awareness will increase, leading to higher adoption of digital public services. This, in turn, can improve access to government services, participation in the digital economy, and social inclusion.','5','The digital ecosystem includes government institutions, private sector actors, civil society organizations, and technology providers that contribute to digital service delivery. Solutions should ensure user-centric design, accessibility standards, and sustainability beyond initial implementation.','FALSE','Output',2);
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (1,'Abfall- und Kreislaufwirtschaft, Ressourceneffizienz','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (2,'Agenda 2030','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (3,'Agrarbasierte Wirtschaftsentwicklung','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (4,'Agrarhandel & Standards','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (5,'Agrarpolitik und Entwicklung ländlicher Räume','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (6,'Anpassung an den Klimawandel','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (7,'Antikorruption & Integrität','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (8,'Arbeitsmarkt und Beschäftigung','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (9,'Bauen in der IZ','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (10,'Bekämpfung illegaler Finanzströme/IFF','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (11,'Berufliche Bildung','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (12,'Bildung','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (13,'Biologische Vielfalt','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (14,'Dezentralisierung & Lokale Regierungsführung','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (15,'Digital Economy','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (16,'Digital Governance and Society','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (17,'Energie','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (18,'Ernährungssicherung','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (19,'Flucht und Migration','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (20,'Frieden & soziale Kohäsion','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (21,'Gleichberechtigung der Geschlechter','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (22,'Global Governance & Multilateralismus','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (23,'Global Health','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (24,'Green Economy','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (25,'Handel','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (26,'Hochschule und Wissenschaft','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (27,'Inclusive Finance','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (28,'Inklusion von Menschen mit Behinderungen','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (29,'Investitionen','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (30,'Jugend und Sport für Entwicklung','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (31,'Klimaschutz (Minderung)','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (32,'Land Governance','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (33,'Landwirtschaft','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (34,'Ländliches Finanzwesen, Agrar- und KMU-Finanzierung','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (35,'Meere und Küsten','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (36,'Menschenrechte','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (37,'Nachhaltiger Verkehr','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (38,'One Health','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (39,'Politische & soziale Teilhabe','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (40,'Privatwirtschaftsförderung','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (41,'Prävention und Bewältigung akuter Krisen und Katastrophen','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (42,'Recht & Justiz','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (43,'Regionale und sektorale Wirtschaftsförderung','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (44,'Rohstoffe','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (45,'Sicherheit','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (46,'Systeme Sozialer Sicherung','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (47,'Umwelt- und Klimafinanzierung','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (48,'Umweltpolitik, Umweltökonomie, Umweltmanagement','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (49,'Universal Health Coverage','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (50,'Urbanisierung','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (51,'Versicherungen','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (52,'Wald','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (53,'Wasser für Entwicklung','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (54,'Wirtschaftspolitik','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (55,'Öffentliche Finanzen','Fach-TOPIC');
+INSERT INTO "sap_topics" ("topic_id","topic_name","topic_cat") VALUES (56,'Öffentliche Verwaltung','Fach-TOPIC');
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (1,8);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (1,40);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (2,40);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (2,29);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (3,40);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (3,29);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (4,48);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (4,1);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (5,47);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (5,37);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (5,31);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (6,21);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (6,36);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (6,28);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (7,31);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (7,34);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (8,25);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (8,40);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (9,42);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (9,40);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (10,40);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (10,29);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (11,25);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (11,42);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (12,25);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (12,43);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (13,8);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (13,40);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (14,8);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (14,40);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (15,8);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (15,40);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (16,8);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (16,42);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (24,22);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (24,16);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (25,15);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (25,11);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (25,26);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (26,15);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (26,16);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (26,25);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (27,40);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (27,31);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (28,15);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (28,16);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (28,21);
 COMMIT;

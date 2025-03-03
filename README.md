@@ -3,7 +3,8 @@
 **Indicator Manager** is a **prototype** designed to demonstrate how a harmonized catalog of indicators could function. It allows users to organize, explore, and manage indicators grouped by sectors, themes, and SDGs, offering an interactive and user-friendly experience. While fully functional, **this prototype was built for demonstration purposes and is not intended for production use**.
 
 ---
-![image](https://github.com/user-attachments/assets/96633fc4-b2f6-40c5-b2db-94a9a3d14382)
+![image](https://github.com/user-attachments/assets/b3e8958a-7cb8-48aa-9235-7056c2b69fec)
+
 
 ---
 
@@ -35,7 +36,7 @@ This prototype aims to illustrate the potential usefulness of a centralized indi
 - **Indicator Selection and Export**: Select indicators for review and export them in a structured CSV format.
 
 
-![image](https://github.com/user-attachments/assets/b77cb076-5688-4160-bf49-cf3c9e5cf3a4)
+![image](https://github.com/user-attachments/assets/09683f12-8483-428f-9e50-fdf03a65c64a)
 
 ---
 

@@ -351,7 +351,7 @@ function displayIndicatorsByThemeAndSector(indicators, expandByDefault = false) 
                   data-name="${indicator.sdg_id}" 
                   onclick="event.stopPropagation(); filterIndicatorsBy('sdg', '${indicator.sdg_id}')">🔍</span>
           </p>             
-          <p><strong>Concepts:</strong> 
+          <p><strong>Related Concepts:</strong> 
             ${indicator.concepts.map(concept => `
               <span class="concept" title="${concept.definition}">${concept.name}</span>
               <span class="filter-icon" title="Display all indicators using the concept '${concept.name}'" data-type="concept" data-name="${concept.name}" onclick="event.stopPropagation(); filterIndicatorsBy('concept', '${concept.name}')">🔍</span>

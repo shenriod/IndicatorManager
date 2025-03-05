@@ -11,11 +11,7 @@ $query = "
 
 	i.unit_of_measurement, i.disaggregation, i.data_collection_method, 
 	i.underlying_theory_of_change, i.indicator_level, i.additional_info,
-	
-	CASE 
-		WHEN i.is_standard = 'FALSE' THEN 'No'
-		ELSE 'Yes'
-	END as is_standard, 
+	i.is_standard, 
            
 	s.name AS sdg_name, s.sdg_id AS sdg_id, s.description AS sdg_description, s.url AS sdg_url,
 

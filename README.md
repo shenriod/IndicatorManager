@@ -3,8 +3,8 @@
 **Indicator Manager** is a **prototype** designed to demonstrate how a harmonized catalog of indicators could function. It allows users to organize, explore, and manage indicators grouped by sectors, themes, and SDGs, offering an interactive and user-friendly experience. While fully functional, **this prototype was built for demonstration purposes and is not intended for production use**.
 
 ---
-![image](https://github.com/user-attachments/assets/b3e8958a-7cb8-48aa-9235-7056c2b69fec)
 
+![image](https://github.com/user-attachments/assets/f8d280cb-c7f0-4341-93db-654c0afccd1c)
 
 ---
 
@@ -31,14 +31,14 @@ This prototype aims to illustrate the potential usefulness of a centralized indi
 ## 📋 Features
 
 - **Dynamic Organization**: Indicators are grouped by sector and theme, with expandable/collapsible sections for easy navigation.
+![image](https://github.com/user-attachments/assets/1af139e5-8481-4de3-9cb0-913e785222f8)
 - **Interactive Search and Filter**: Quickly find indicators based on keywords, concepts, SDGs, or packages.
+- ![image](https://github.com/user-attachments/assets/d3b4d67f-fdb2-4c81-b6ab-81f3af8f5ddc)
 - **SDG Integration**: Each indicator links to its related SDG, with tooltips for descriptions and quick links to SDG details.
 - **Indicator Selection and Export**: Select indicators for review and export them in a structured CSV format.
+![image](https://github.com/user-attachments/assets/8a016931-ff5e-4792-906b-c5e19113c830)
 - **Identification of Possible Duplicates**: The system now includes a mechanism to highlight potential duplicate indicators, allowing users to export them for further analysis.
-
-
-
-![image](https://github.com/user-attachments/assets/09683f12-8483-428f-9e50-fdf03a65c64a)
+![image](https://github.com/user-attachments/assets/599276d9-8b4c-487b-bb97-a81b52dcb275)
 
 ---
 

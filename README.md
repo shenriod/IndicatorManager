@@ -37,7 +37,7 @@ This prototype aims to illustrate the potential usefulness of a centralized indi
 - **SDG Integration**: Each indicator links to its related SDG, with tooltips for descriptions and quick links to SDG details.
 - **Indicator Selection and Export**: Select indicators for review and export them in a structured CSV format.
 ![image](https://github.com/user-attachments/assets/8a016931-ff5e-4792-906b-c5e19113c830)
-- **Identification of Possible Duplicates**: The system now includes a mechanism to highlight potential duplicate indicators, allowing users to export them for further analysis.
+- **Identification of Possible Duplicates**: The system now includes a mechanism to highlight potential duplicate indicators, allowing users to export them for further analysis. [NB: currently, the possible duplicates are hard-coded in the database. In the future, a more dynamic solution could be implemented (periodic review of the indicators by a LLM, e.g.)]
 ![image](https://github.com/user-attachments/assets/599276d9-8b4c-487b-bb97-a81b52dcb275)
 
 ---

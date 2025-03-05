@@ -248,6 +248,10 @@
   </div>
   <div id="page-title">Harmonized Indicators Catalog</div>
   <input type="text" id="search" placeholder="Search indicators by name..." oninput="searchIndicators()" />
+  <button id="export-duplicates-button" 
+  style="padding: 5px 10px; font-size: 0.9em; background-color:  #2abb10; color: white; border: none; border-radius: 5px; cursor: pointer; float: right;"
+  title="Show the indicators that have been marked as possible duplicates"
+  onclick="exportPossibleDuplicates()">🔁 Export duplicates 🔁</button>
   <div id="filter-result" style="margin-top: 10px; font-size: 1em; color: #555;"></div>
   <button id="reset-filter" style="display: none; margin-top: 10px; padding: 10px; font-size: 1em;" onclick="resetFilter()">Reset Filter</button>
 
@@ -264,6 +268,7 @@
     <div style="display: flex; gap: 10px;"> <!-- Flex container for buttons -->
       <button id="deselect-button" style="padding: 5px 10px; font-size: 0.9em; background-color: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer;" onclick="deselectAllIndicators()">Deselect All</button>
       <button id="export-button" style="padding: 5px 10px; font-size: 0.9em; background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer;" onclick="exportSelectedIndicators()">Export</button>
+
     </div>
   </footer>
 
@@ -647,6 +652,38 @@ function displayIndicatorsByThemeAndSector(indicators, expandByDefault = false) 
     document.body.removeChild(link);
   }
 
+
+async function exportPossibleDuplicates() {
+    try {
+        const response = await fetch('api/get_possible_duplicates.php');
+        const duplicates = await response.json();
+
+        if (duplicates.length === 0) {
+            alert('No possible duplicates found!');
+            return;
+        }
+
+        // Créer le contenu CSV
+        let csvContent = 'Indicator ID 1,Indicator Name 1,Indicator ID 2,Indicator Name 2,Comments\n';
+        duplicates.forEach(dup => {
+            csvContent += `"${dup.indicator_id1}","${dup.indicator1_name}","${dup.indicator_id2}","${dup.indicator2_name}","${dup.comments}"\n`;
+        });
+
+        // Créer un blob et déclencher le téléchargement
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('download', 'possible_duplicates.csv');
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    } catch (error) {
+        console.error('Error exporting possible duplicates:', error);
+        alert('An error occurred while exporting possible duplicates.');
+    }
+}
 
 
         

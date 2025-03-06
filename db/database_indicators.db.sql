@@ -27,8 +27,8 @@ CREATE TABLE IF NOT EXISTS "sectors" (
 CREATE TABLE IF NOT EXISTS "indicator_concepts" (
 	"indicator_id"	INTEGER NOT NULL,
 	"concept_id"	INTEGER NOT NULL,
-	FOREIGN KEY("indicator_id") REFERENCES "indicators"("indicator_id"),
 	PRIMARY KEY("indicator_id","concept_id"),
+	FOREIGN KEY("indicator_id") REFERENCES "indicators"("indicator_id"),
 	FOREIGN KEY("concept_id") REFERENCES "key_concepts"("concept_id")
 );
 CREATE TABLE IF NOT EXISTS "indicator_packages" (
@@ -43,8 +43,8 @@ CREATE TABLE IF NOT EXISTS "themes" (
 	"name"	TEXT NOT NULL,
 	"description"	TEXT,
 	"sector_id"	INTEGER,
-	FOREIGN KEY("sector_id") REFERENCES "sectors"("sector_id"),
-	PRIMARY KEY("theme_id" AUTOINCREMENT)
+	PRIMARY KEY("theme_id" AUTOINCREMENT),
+	FOREIGN KEY("sector_id") REFERENCES "sectors"("sector_id")
 );
 CREATE TABLE IF NOT EXISTS "units" (
 	"unit_id"	INTEGER,
@@ -61,8 +61,8 @@ CREATE TABLE IF NOT EXISTS "sap_topics" (
 CREATE TABLE IF NOT EXISTS "indicator_saptopics" (
 	"indicator_id"	INTEGER NOT NULL,
 	"topic_id"	INTEGER NOT NULL,
-	FOREIGN KEY("topic_id") REFERENCES "sap_topics"("topic_id"),
 	PRIMARY KEY("indicator_id","topic_id"),
+	FOREIGN KEY("topic_id") REFERENCES "sap_topics"("topic_id"),
 	FOREIGN KEY("indicator_id") REFERENCES "indicators"("indicator_id")
 );
 CREATE TABLE IF NOT EXISTS "markers" (
@@ -73,9 +73,9 @@ CREATE TABLE IF NOT EXISTS "markers" (
 CREATE TABLE IF NOT EXISTS "indicator_markers" (
 	"indicator_id"	INT NOT NULL,
 	"marker_code"	VARCHAR(10) NOT NULL,
-	FOREIGN KEY("indicator_id") REFERENCES "indicators"("indicator_id"),
+	FOREIGN KEY("marker_code") REFERENCES "markers"("marker_code"),
 	PRIMARY KEY("indicator_id","marker_code"),
-	FOREIGN KEY("marker_code") REFERENCES "markers"("marker_code")
+	FOREIGN KEY("indicator_id") REFERENCES "indicators"("indicator_id")
 );
 CREATE TABLE IF NOT EXISTS "indicators" (
 	"indicator_id"	INTEGER,
@@ -92,8 +92,15 @@ CREATE TABLE IF NOT EXISTS "indicators" (
 	"indicator_level"	TEXT NOT NULL DEFAULT 'No',
 	"responsible_unit"	INTEGER DEFAULT 6,
 	FOREIGN KEY("sdg_id") REFERENCES "sdgs"("sdg_id"),
-	FOREIGN KEY("theme_id") REFERENCES "themes"("theme_id"),
-	PRIMARY KEY("indicator_id" AUTOINCREMENT)
+	PRIMARY KEY("indicator_id" AUTOINCREMENT),
+	FOREIGN KEY("theme_id") REFERENCES "themes"("theme_id")
+);
+CREATE TABLE IF NOT EXISTS "possible_duplicates" (
+	"indicator_id1"	INTEGER,
+	"indicator_id2"	INTEGER,
+	"comments"	INTEGER,
+	FOREIGN KEY("indicator_id1") REFERENCES "indicators"("indicator_id"),
+	PRIMARY KEY("indicator_id1","indicator_id2")
 );
 INSERT INTO "sdgs" ("sdg_id","name","description","url") VALUES ('1','No Poverty','End poverty in all its forms everywhere.','https://sdgs.un.org/goals/goal1');
 INSERT INTO "sdgs" ("sdg_id","name","description","url") VALUES ('1.1','No Poverty','By 2030, eradicate extreme poverty for all people everywhere, currently measured as people living on less than $1.25 a day.','https://sdgs.un.org/goals/goal1');
@@ -485,6 +492,18 @@ INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (42,2);
 INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (43,10);
 INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (43,75);
 INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (43,76);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (73,51);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (73,52);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (73,53);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (73,54);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (73,55);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (74,51);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (74,55);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (74,71);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (74,76);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (75,51);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (75,55);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (75,75);
 INSERT INTO "indicator_packages" ("indicator_id","package_id") VALUES (7,1);
 INSERT INTO "indicator_packages" ("indicator_id","package_id") VALUES (8,1);
 INSERT INTO "indicator_packages" ("indicator_id","package_id") VALUES (9,1);
@@ -515,6 +534,7 @@ INSERT INTO "themes" ("theme_id","name","description","sector_id") VALUES (21,'S
 INSERT INTO "themes" ("theme_id","name","description","sector_id") VALUES (22,'Climate and energy, just transition [Core area 4 of standard indicators]','Core area 4 of the BMZ standard indicators',1);
 INSERT INTO "themes" ("theme_id","name","description","sector_id") VALUES (23,'Conserving nature and natural resources, protecting life on Earth [Core area 5 of standard indicators]','Core area 5 of the BMZ standard indicators',1);
 INSERT INTO "themes" ("theme_id","name","description","sector_id") VALUES (24,'Health, social protection and population dynamics [Core area 6 of standard indicators]','Core area 6 of the BMZ standard indicators',6);
+INSERT INTO "themes" ("theme_id","name","description","sector_id") VALUES (25,'Sustainable land use','',1);
 INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (6,'0010','Unternehmensebene');
 INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (7,'0020','Beauftragte auf Unternehmensebene');
 INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (8,'0090','Betriebsrat Eschborn');
@@ -935,6 +955,13 @@ INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (69,23);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (70,23);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (71,23);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (72,23);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (73,6);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (73,52);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (74,4);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (74,6);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (74,18);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (74,33);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (75,6);
 INSERT INTO "markers" ("marker_code","marker_name") VALUES ('GG','Gender equality');
 INSERT INTO "markers" ("marker_code","marker_name") VALUES ('UR','Aid to environment');
 INSERT INTO "markers" ("marker_code","marker_name") VALUES ('DIG','Democratic and inclusive governance');
@@ -1024,4 +1051,21 @@ INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of
 INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (70,24,'Number of healthcare facilities that have been built or whose capacity has been strengthened','[definition missing] This is a BMZ standard indicator - version April 2022 (6.2)','[unit of measurement missing]','[disaggregation missing]','[data collection method missing]','[theory of change missing]','3','Core area 6: Health, social protection and population dynamics | Area of intervention 1: Health, pandemics and One Health | Area of intervention 2: Social protection | Area of intervention 3: Population dynamics; sexual and reproductive health and rights','Standard indicator 6.2','Outcome',118);
 INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (71,24,'Number of people who have received social protection or whose social protection has been improved','[definition missing] This is a BMZ standard indicator - version April 2022 (6.3)','[unit of measurement missing]','Basic social protection/social protection systems (SDG 1); coverage of financial risks related to general healthcare (SDG 3.8).','[data collection method missing]','[theory of change missing]','3','Core area 6: Health, social protection and population dynamics | Area of intervention 1: Health, pandemics and One Health | Area of intervention 2: Social protection | Area of intervention 3: Population dynamics; sexual and reproductive health and rights','Standard indicator 6.3','Outcome',118);
 INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (72,24,'Number of people who have been supported in exercising their right to sexual self-determination and reproductive health','[definition missing] This is a BMZ standard indicator - version April 2022 (6.4)','[unit of measurement missing]','Girls/women; Age: children (0-18 yrs) / youth (15-24 yrs)','[data collection method missing]','[theory of change missing]','3','Core area 6: Health, social protection and population dynamics | Area of intervention 1: Health, pandemics and One Health | Area of intervention 2: Social protection | Area of intervention 3: Population dynamics; sexual and reproductive health and rights','Standard indicator 6.4','Outcome',118);
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (73,25,'Tree cover change','Measures the net change in tree cover over a specific period, accounting for both deforestation and reforestation.','Hectares (ha) or percentage (%)','Region, forest type (tropical, temperate, boreal), cause of change (deforestation, afforestation, reforestation)','Satellite imagery analysis (e.g., MODIS, Landsat), remote sensing, national forest inventories.
+Possible data sources: https://gizonline.sharepoint.com/:l:/r/sites/DSC/Lists/Geo%20Data%20Catalog?e=HReE4I','Maintaining or increasing tree cover contributes to carbon sequestration, biodiversity conservation, and climate resilience.','15','A very good example can be found here: https://storymaps.arcgis.com/stories/ac8fd88eab9e455f8094c8de0aa35374','No','Output',119);
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (74,25,'Cropland change','Tracks the expansion or contraction of agricultural land over time, reflecting shifts in land use patterns.','Hectares (ha) or percentage (%)','Region, crop type, change type (expansion, abandonment)','Satellite data (e.g., MODIS, Sentinel), national agricultural surveys, land use statistics.
+Possible data sources: https://gizonline.sharepoint.com/:l:/r/sites/DSC/Lists/Geo%20Data%20Catalog?e=HReE4I','Changes in cropland affect food production, biodiversity, and ecosystem services. Monitoring cropland change helps assess agricultural sustainability and land-use policies.','2','','No','Output',119);
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit") VALUES (75,25,'Rangeland change','Measures variations in the extent and condition of rangelands due to factors such as overgrazing, climate change, or improved management.','Hectares (ha) or percentage (%)','Region, rangeland type (grassland, shrubland, savanna), degradation level','Satellite remote sensing (NDVI, MODIS), field surveys, grazing records.
+Possible data sources: Possible data sources: https://gizonline.sharepoint.com/:l:/r/sites/DSC/Lists/Geo%20Data%20Catalog?e=HReE4I','Sustainable rangeland management is essential for biodiversity conservation, livestock production, and ecosystem resilience. Monitoring change helps inform land use planning and policy-making.','15','','No','Output',119);
+INSERT INTO "possible_duplicates" ("indicator_id1","indicator_id2","comments") VALUES (1,13,'Both indicators measure job creation, though one focuses on FTEs while the other on net job creation.');
+INSERT INTO "possible_duplicates" ("indicator_id1","indicator_id2","comments") VALUES (13,48,'These indicators seem almost identical, measuring jobs created or secured, with only a slight difference in formulation.');
+INSERT INTO "possible_duplicates" ("indicator_id1","indicator_id2","comments") VALUES (14,48,'Both indicators measure additional employment, though one emphasizes employment beyond initial project goals.');
+INSERT INTO "possible_duplicates" ("indicator_id1","indicator_id2","comments") VALUES (2,10,'Turnover and profit before tax are closely related, but profit also depends on costs and taxes.');
+INSERT INTO "possible_duplicates" ("indicator_id1","indicator_id2","comments") VALUES (15,49,'Both indicators measure an increase in people’s income due to economic interventions.');
+INSERT INTO "possible_duplicates" ("indicator_id1","indicator_id2","comments") VALUES (7,52,'Access to financial services and improved access are very similar, though the latter focuses on specific beneficiaries.');
+INSERT INTO "possible_duplicates" ("indicator_id1","indicator_id2","comments") VALUES (9,11,'The formalization of enterprises and establishing formal business relationships are strongly linked.');
+INSERT INTO "possible_duplicates" ("indicator_id1","indicator_id2","comments") VALUES (16,50,'Improved working conditions and the number of people benefiting from better conditions are closely related.');
+INSERT INTO "possible_duplicates" ("indicator_id1","indicator_id2","comments") VALUES (73,64,'Both indicators measure changes in forest areas over time. One focuses on net tree cover change, while the other tracks areas under protection, restoration, or sustainable management, which can also influence tree cover dynamics.');
+INSERT INTO "possible_duplicates" ("indicator_id1","indicator_id2","comments") VALUES (75,43,'Both indicators assess land use changes in rangelands and pasture areas. One specifically tracks variations due to factors like overgrazing and climate change, while the other measures sustainable land management improvements, which can result in similar observed changes.');
+INSERT INTO "possible_duplicates" ("indicator_id1","indicator_id2","comments") VALUES (74,43,'Both indicators monitor changes in agricultural land use. One tracks expansion or contraction of cropland, while the other measures sustainable farming practices, which can also lead to shifts in land use patterns.');
 COMMIT;

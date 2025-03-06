@@ -344,7 +344,9 @@ function displayIndicatorsByThemeAndSector(indicators, expandByDefault = false) 
           <p><strong>Definition:</strong> ${indicator.definition}</p>
           <p><strong>Unit of Measurement:</strong> ${indicator.unit_of_measurement}</p>
           <p><strong>Disaggregation:</strong> ${indicator.disaggregation}</p>
-          <p><strong>Data Collection Method:</strong> ${indicator.data_collection_method}</p>
+          <p><strong>Data Collection Method:</strong> ${indicator.data_collection_method ? formatUrlsAsLinks(indicator.data_collection_method).replace(/<a /g, '<a onclick="event.stopPropagation()" ')
+              : 'N/A'}</p>
+
           <p><strong>Underlying Theory of Change:</strong> ${indicator.underlying_theory_of_change}</p>
           <p><strong>Related SDG:</strong> 
             <span class="sdg" title="${indicator.sdg_description}">

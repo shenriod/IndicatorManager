@@ -4,7 +4,8 @@
 
 ---
 
-![image](https://github.com/user-attachments/assets/f8d280cb-c7f0-4341-93db-654c0afccd1c)
+![image](https://github.com/user-attachments/assets/29be17bb-ab92-4b45-82b5-051ffb59aaa5)
+
 
 ---
 
@@ -31,9 +32,9 @@ This prototype aims to illustrate the potential usefulness of a centralized indi
 ## 📋 Features
 
 - **Dynamic Organization**: Indicators are grouped by sector and theme, with expandable/collapsible sections for easy navigation.
-![image](https://github.com/user-attachments/assets/1af139e5-8481-4de3-9cb0-913e785222f8)
+![image](https://github.com/user-attachments/assets/f3611c45-2d63-4794-84b1-7d7de56fb874)
 - **Interactive Search and Filter**: Quickly find indicators based on keywords, concepts, SDGs, or packages.
-- ![image](https://github.com/user-attachments/assets/d3b4d67f-fdb2-4c81-b6ab-81f3af8f5ddc)
+![image](https://github.com/user-attachments/assets/242e6756-21ff-4c7d-a0b6-fe539ee4b801)
 - **SDG Integration**: Each indicator links to its related SDG, with tooltips for descriptions and quick links to SDG details.
 - **Indicator Selection and Export**: Select indicators for review and export them in a structured CSV format.
 ![image](https://github.com/user-attachments/assets/8a016931-ff5e-4792-906b-c5e19113c830)

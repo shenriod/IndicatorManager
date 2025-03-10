@@ -246,12 +246,18 @@
   <div id="prototype-banner">
       ⚠️ This page is a prototype and its content has not been officially validated. It is not ready for official usage. ⚠️
   </div>
+  
+  
   <div id="page-title">Harmonized Indicators Catalog</div>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+    <p id="indicator-count" style="font-weight: bold; color: #007BFF; margin: 0;"></p>
+    <button id="export-duplicates-button" 
+      style="padding: 5px 10px; font-size: 0.9em; background-color:  #2abb10; color: white; border: none; border-radius: 5px; cursor: pointer;"
+      title="Show the indicators that have been marked as possible duplicates"
+      onclick="exportPossibleDuplicates()">🔁 Export duplicates 🔁</button>
+  </div>
+
   <input type="text" id="search" placeholder="Search indicators by name..." oninput="searchIndicators()" />
-  <button id="export-duplicates-button" 
-  style="padding: 5px 10px; font-size: 0.9em; background-color:  #2abb10; color: white; border: none; border-radius: 5px; cursor: pointer; float: right;"
-  title="Show the indicators that have been marked as possible duplicates"
-  onclick="exportPossibleDuplicates()">🔁 Export duplicates 🔁</button>
   <div id="filter-result" style="margin-top: 10px; font-size: 1em; color: #555;"></div>
   <button id="reset-filter" style="display: none; margin-top: 10px; padding: 10px; font-size: 1em;" onclick="resetFilter()">Reset Filter</button>
 
@@ -341,14 +347,14 @@ function displayIndicatorsByThemeAndSector(indicators, expandByDefault = false) 
 
         indicatorDiv.innerHTML = `
           <h3>${indicator.name}</h3>
-          <p><strong>Definition:</strong> ${indicator.definition}</p>
-          <p><strong>Indicator formulation:</strong> ${indicator.indicator_formulation}</p>
-          <p><strong>Unit of Measurement:</strong> ${indicator.unit_of_measurement}</p>
-          <p><strong>Disaggregation:</strong> ${indicator.disaggregation}</p>
-          <p><strong>Data Collection Method:</strong> ${indicator.data_collection_method ? formatUrlsAsLinks(indicator.data_collection_method).replace(/<a /g, '<a onclick="event.stopPropagation()" ')
+          <p title="A short definition for this indicator"><strong>Definition:</strong> ${indicator.definition}</p>
+          <p title="Example of indicator formulation, according to BMZ guidelines. Remember that the baseline and target values are NOT part of the indicator formulation"><strong>Indicator formulation:</strong> ${indicator.indicator_formulation}</p>
+          <p title="Typical unit of measurement for this indicator"><strong>Unit of Measurement:</strong> ${indicator.unit_of_measurement}</p>
+          <p title="Possible dimensions / levels for the disaggregation"><strong>Disaggregation:</strong> ${indicator.disaggregation}</p>
+          <p title="Typical sources of information, or methods to acquire the data needed to compute this indicator"><strong>Data Collection Method:</strong> ${indicator.data_collection_method ? formatUrlsAsLinks(indicator.data_collection_method).replace(/<a /g, '<a onclick="event.stopPropagation()" ')
               : 'N/A'}</p>
 
-          <p><strong>Underlying Theory of Change:</strong> ${indicator.underlying_theory_of_change}</p>
+          <p title="What are the actual phenomena / changes that this indicator is meant to measure?"><strong>Underlying Theory of Change:</strong> ${indicator.underlying_theory_of_change}</p>
           <p><strong>Related SDG:</strong> 
             <span class="sdg" title="${indicator.sdg_description}">
               ${indicator.sdg_id} - ${indicator.sdg_name}
@@ -701,6 +707,21 @@ async function exportPossibleDuplicates() {
       // Update the footer
       updateSelectedIndicatorsList();
     }
+    
+    async function fetchIndicatorCount() {
+        try {
+            const response = await fetch('api/get_indicator_count.php');
+            const data = await response.json();
+            document.getElementById('indicator-count').textContent = `There are currently ${data.total_indicators} indicators in the database`;
+        } catch (error) {
+            console.error('Error fetching indicator count:', error);
+            document.getElementById('indicator-count').textContent = 'Total Indicators: N/A';
+        }
+    }
+
+// Charger le compteur au chargement de la page
+fetchIndicatorCount();
+
 
 
 

@@ -342,6 +342,7 @@ function displayIndicatorsByThemeAndSector(indicators, expandByDefault = false) 
         indicatorDiv.innerHTML = `
           <h3>${indicator.name}</h3>
           <p><strong>Definition:</strong> ${indicator.definition}</p>
+          <p><strong>Indicator formulation:</strong> ${indicator.indicator_formulation}</p>
           <p><strong>Unit of Measurement:</strong> ${indicator.unit_of_measurement}</p>
           <p><strong>Disaggregation:</strong> ${indicator.disaggregation}</p>
           <p><strong>Data Collection Method:</strong> ${indicator.data_collection_method ? formatUrlsAsLinks(indicator.data_collection_method).replace(/<a /g, '<a onclick="event.stopPropagation()" ')

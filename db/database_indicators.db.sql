@@ -27,9 +27,9 @@ CREATE TABLE IF NOT EXISTS "sectors" (
 CREATE TABLE IF NOT EXISTS "indicator_concepts" (
 	"indicator_id"	INTEGER NOT NULL,
 	"concept_id"	INTEGER NOT NULL,
+	FOREIGN KEY("concept_id") REFERENCES "key_concepts"("concept_id"),
 	PRIMARY KEY("indicator_id","concept_id"),
-	FOREIGN KEY("indicator_id") REFERENCES "indicators"("indicator_id"),
-	FOREIGN KEY("concept_id") REFERENCES "key_concepts"("concept_id")
+	FOREIGN KEY("indicator_id") REFERENCES "indicators"("indicator_id")
 );
 CREATE TABLE IF NOT EXISTS "indicator_packages" (
 	"indicator_id"	INTEGER NOT NULL,
@@ -61,9 +61,9 @@ CREATE TABLE IF NOT EXISTS "sap_topics" (
 CREATE TABLE IF NOT EXISTS "indicator_saptopics" (
 	"indicator_id"	INTEGER NOT NULL,
 	"topic_id"	INTEGER NOT NULL,
-	PRIMARY KEY("indicator_id","topic_id"),
 	FOREIGN KEY("topic_id") REFERENCES "sap_topics"("topic_id"),
-	FOREIGN KEY("indicator_id") REFERENCES "indicators"("indicator_id")
+	FOREIGN KEY("indicator_id") REFERENCES "indicators"("indicator_id"),
+	PRIMARY KEY("indicator_id","topic_id")
 );
 CREATE TABLE IF NOT EXISTS "markers" (
 	"marker_code"	VARCHAR(10),
@@ -73,16 +73,16 @@ CREATE TABLE IF NOT EXISTS "markers" (
 CREATE TABLE IF NOT EXISTS "indicator_markers" (
 	"indicator_id"	INT NOT NULL,
 	"marker_code"	VARCHAR(10) NOT NULL,
-	PRIMARY KEY("indicator_id","marker_code"),
 	FOREIGN KEY("indicator_id") REFERENCES "indicators"("indicator_id"),
-	FOREIGN KEY("marker_code") REFERENCES "markers"("marker_code")
+	FOREIGN KEY("marker_code") REFERENCES "markers"("marker_code"),
+	PRIMARY KEY("indicator_id","marker_code")
 );
 CREATE TABLE IF NOT EXISTS "possible_duplicates" (
 	"indicator_id1"	INTEGER,
 	"indicator_id2"	INTEGER,
 	"comments"	INTEGER,
-	FOREIGN KEY("indicator_id1") REFERENCES "indicators"("indicator_id"),
-	PRIMARY KEY("indicator_id1","indicator_id2")
+	PRIMARY KEY("indicator_id1","indicator_id2"),
+	FOREIGN KEY("indicator_id1") REFERENCES "indicators"("indicator_id")
 );
 CREATE TABLE IF NOT EXISTS "indicators" (
 	"indicator_id"	INTEGER,
@@ -99,9 +99,9 @@ CREATE TABLE IF NOT EXISTS "indicators" (
 	"indicator_level"	TEXT NOT NULL DEFAULT 'No',
 	"responsible_unit"	INTEGER DEFAULT 6,
 	"indicator_formulation"	TEXT,
-	FOREIGN KEY("sdg_id") REFERENCES "sdgs"("sdg_id"),
+	PRIMARY KEY("indicator_id" AUTOINCREMENT),
 	FOREIGN KEY("theme_id") REFERENCES "themes"("theme_id"),
-	PRIMARY KEY("indicator_id" AUTOINCREMENT)
+	FOREIGN KEY("sdg_id") REFERENCES "sdgs"("sdg_id")
 );
 INSERT INTO "sdgs" ("sdg_id","name","description","url") VALUES ('1','No Poverty','End poverty in all its forms everywhere.','https://sdgs.un.org/goals/goal1');
 INSERT INTO "sdgs" ("sdg_id","name","description","url") VALUES ('1.1','No Poverty','By 2030, eradicate extreme poverty for all people everywhere, currently measured as people living on less than $1.25 a day.','https://sdgs.un.org/goals/goal1');
@@ -376,7 +376,7 @@ INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (99,'Adopti
 INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (100,'Inclusion','Ensuring equal access to education and vocational training for all individuals, including marginalized groups, women, and people with disabilities.');
 INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (101,'Qualification of Teaching and Educational Personnel','Enhancing the professional skills, pedagogical knowledge, and technical expertise of teachers and trainers to improve education and vocational training quality.');
 INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (102,'Facility Management','The administration and optimization of educational infrastructure, ensuring safe, functional, and sustainable learning environments.');
-INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (103,'Digitalization','The integration of digital technologies into education and vocational training systems to enhance learning, administration, and accessibility.');
+INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (103,'Digitalization of the Education sector','The integration of digital technologies into education and vocational training systems to enhance learning, administration, and accessibility.');
 INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (104,'Education and School Health','Initiatives that combine educational development with health promotion to improve student well-being and learning outcomes.');
 INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (105,'Institutional Development of Higher Education and Research Institutions','Strengthening the governance, capacity, and infrastructure of universities and research institutions to improve academic and research excellence.');
 INSERT INTO "key_concepts" ("concept_id","name","definition") VALUES (106,'Cooperative Training','A dual training approach that combines theoretical education in schools with practical training in workplaces, fostering industry-relevant skills.');
@@ -656,6 +656,8 @@ INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (184,100);
 INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (185,100);
 INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (186,100);
 INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (187,100);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (131,10);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (181,112);
 INSERT INTO "indicator_packages" ("indicator_id","package_id") VALUES (7,1);
 INSERT INTO "indicator_packages" ("indicator_id","package_id") VALUES (8,1);
 INSERT INTO "indicator_packages" ("indicator_id","package_id") VALUES (9,1);
@@ -1148,7 +1150,6 @@ INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (116,12);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (116,28);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (117,12);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (117,28);
-INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (117,15);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (118,12);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (118,28);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (119,12);
@@ -1162,19 +1163,14 @@ INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (122,26);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (123,12);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (123,28);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (124,12);
-INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (124,9);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (125,12);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (125,31);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (126,12);
-INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (126,15);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (127,12);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (127,18);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (128,12);
-INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (128,15);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (129,12);
-INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (129,9);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (130,12);
-INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (130,15);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (131,12);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (131,31);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (132,12);
@@ -1183,13 +1179,10 @@ INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (133,12);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (133,19);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (133,21);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (134,12);
-INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (134,15);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (135,12);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (135,18);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (136,26);
-INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (136,15);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (137,26);
-INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (137,15);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (138,26);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (138,21);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (139,26);

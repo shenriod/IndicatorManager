@@ -39,7 +39,7 @@ $query = "
 	LEFT JOIN units u ON i.responsible_unit = u.unit_id
 
 	GROUP BY i.indicator_id
-	ORDER BY sec.sector_id, t.name, i.name;
+	ORDER BY sec.name, t.name, i.name;
 ";
 
 $stmt = $db->prepare($query);

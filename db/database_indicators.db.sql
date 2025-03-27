@@ -27,15 +27,15 @@ CREATE TABLE IF NOT EXISTS "sectors" (
 CREATE TABLE IF NOT EXISTS "indicator_concepts" (
 	"indicator_id"	INTEGER NOT NULL,
 	"concept_id"	INTEGER NOT NULL,
+	FOREIGN KEY("indicator_id") REFERENCES "indicators"("indicator_id"),
 	FOREIGN KEY("concept_id") REFERENCES "key_concepts"("concept_id"),
-	PRIMARY KEY("indicator_id","concept_id"),
-	FOREIGN KEY("indicator_id") REFERENCES "indicators"("indicator_id")
+	PRIMARY KEY("indicator_id","concept_id")
 );
 CREATE TABLE IF NOT EXISTS "indicator_packages" (
 	"indicator_id"	INTEGER NOT NULL,
 	"package_id"	INTEGER NOT NULL,
-	FOREIGN KEY("indicator_id") REFERENCES "indicators"("indicator_id"),
 	FOREIGN KEY("package_id") REFERENCES "packages"("package_id"),
+	FOREIGN KEY("indicator_id") REFERENCES "indicators"("indicator_id"),
 	PRIMARY KEY("indicator_id","package_id")
 );
 CREATE TABLE IF NOT EXISTS "themes" (
@@ -43,8 +43,8 @@ CREATE TABLE IF NOT EXISTS "themes" (
 	"name"	TEXT NOT NULL,
 	"description"	TEXT,
 	"sector_id"	INTEGER,
-	FOREIGN KEY("sector_id") REFERENCES "sectors"("sector_id"),
-	PRIMARY KEY("theme_id" AUTOINCREMENT)
+	PRIMARY KEY("theme_id" AUTOINCREMENT),
+	FOREIGN KEY("sector_id") REFERENCES "sectors"("sector_id")
 );
 CREATE TABLE IF NOT EXISTS "units" (
 	"unit_id"	INTEGER,
@@ -61,9 +61,9 @@ CREATE TABLE IF NOT EXISTS "sap_topics" (
 CREATE TABLE IF NOT EXISTS "indicator_saptopics" (
 	"indicator_id"	INTEGER NOT NULL,
 	"topic_id"	INTEGER NOT NULL,
+	PRIMARY KEY("indicator_id","topic_id"),
 	FOREIGN KEY("topic_id") REFERENCES "sap_topics"("topic_id"),
-	FOREIGN KEY("indicator_id") REFERENCES "indicators"("indicator_id"),
-	PRIMARY KEY("indicator_id","topic_id")
+	FOREIGN KEY("indicator_id") REFERENCES "indicators"("indicator_id")
 );
 CREATE TABLE IF NOT EXISTS "markers" (
 	"marker_code"	VARCHAR(10),
@@ -74,15 +74,15 @@ CREATE TABLE IF NOT EXISTS "indicator_markers" (
 	"indicator_id"	INT NOT NULL,
 	"marker_code"	VARCHAR(10) NOT NULL,
 	FOREIGN KEY("indicator_id") REFERENCES "indicators"("indicator_id"),
-	FOREIGN KEY("marker_code") REFERENCES "markers"("marker_code"),
-	PRIMARY KEY("indicator_id","marker_code")
+	PRIMARY KEY("indicator_id","marker_code"),
+	FOREIGN KEY("marker_code") REFERENCES "markers"("marker_code")
 );
 CREATE TABLE IF NOT EXISTS "possible_duplicates" (
 	"indicator_id1"	INTEGER,
 	"indicator_id2"	INTEGER,
 	"comments"	INTEGER,
-	PRIMARY KEY("indicator_id1","indicator_id2"),
-	FOREIGN KEY("indicator_id1") REFERENCES "indicators"("indicator_id")
+	FOREIGN KEY("indicator_id1") REFERENCES "indicators"("indicator_id"),
+	PRIMARY KEY("indicator_id1","indicator_id2")
 );
 CREATE TABLE IF NOT EXISTS "indicators" (
 	"indicator_id"	INTEGER,
@@ -100,8 +100,8 @@ CREATE TABLE IF NOT EXISTS "indicators" (
 	"responsible_unit"	INTEGER DEFAULT 6,
 	"indicator_formulation"	TEXT,
 	PRIMARY KEY("indicator_id" AUTOINCREMENT),
-	FOREIGN KEY("theme_id") REFERENCES "themes"("theme_id"),
-	FOREIGN KEY("sdg_id") REFERENCES "sdgs"("sdg_id")
+	FOREIGN KEY("sdg_id") REFERENCES "sdgs"("sdg_id"),
+	FOREIGN KEY("theme_id") REFERENCES "themes"("theme_id")
 );
 INSERT INTO "sdgs" ("sdg_id","name","description","url") VALUES ('1','No Poverty','End poverty in all its forms everywhere.','https://sdgs.un.org/goals/goal1');
 INSERT INTO "sdgs" ("sdg_id","name","description","url") VALUES ('1.1','No Poverty','By 2030, eradicate extreme poverty for all people everywhere, currently measured as people living on less than $1.25 a day.','https://sdgs.un.org/goals/goal1');
@@ -658,6 +658,21 @@ INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (186,100);
 INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (187,100);
 INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (131,10);
 INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (181,112);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (188,11);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (188,59);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (188,100);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (189,11);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (189,59);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (189,100);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (190,11);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (190,59);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (190,33);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (191,11);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (191,59);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (191,33);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (192,11);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (192,59);
+INSERT INTO "indicator_concepts" ("indicator_id","concept_id") VALUES (192,33);
 INSERT INTO "indicator_packages" ("indicator_id","package_id") VALUES (7,1);
 INSERT INTO "indicator_packages" ("indicator_id","package_id") VALUES (8,1);
 INSERT INTO "indicator_packages" ("indicator_id","package_id") VALUES (9,1);
@@ -693,6 +708,7 @@ INSERT INTO "themes" ("theme_id","name","description","sector_id") VALUES (26,'G
 INSERT INTO "themes" ("theme_id","name","description","sector_id") VALUES (27,'Primary education',NULL,9);
 INSERT INTO "themes" ("theme_id","name","description","sector_id") VALUES (28,'Superior education',NULL,9);
 INSERT INTO "themes" ("theme_id","name","description","sector_id") VALUES (29,'Technical and vocational education (TVET)',NULL,9);
+INSERT INTO "themes" ("theme_id","name","description","sector_id") VALUES (30,'e-learning (ATINGI)','',9);
 INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (6,'0010','Unternehmensebene');
 INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (7,'0020','Beauftragte auf Unternehmensebene');
 INSERT INTO "units" ("unit_id","unit_shortname","unit_longname") VALUES (8,'0090','Betriebsrat Eschborn');
@@ -1257,6 +1273,21 @@ INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (184,21);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (185,21);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (186,40);
 INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (187,11);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (188,11);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (188,15);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (188,16);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (189,11);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (189,15);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (189,16);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (190,11);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (190,15);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (190,16);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (191,11);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (191,15);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (191,16);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (192,11);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (192,15);
+INSERT INTO "indicator_saptopics" ("indicator_id","topic_id") VALUES (192,16);
 INSERT INTO "markers" ("marker_code","marker_name") VALUES ('GG','Gender equality');
 INSERT INTO "markers" ("marker_code","marker_name") VALUES ('UR','Aid to environment');
 INSERT INTO "markers" ("marker_code","marker_name") VALUES ('DIG','Democratic and inclusive governance');
@@ -1447,4 +1478,9 @@ INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of
 INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit","indicator_formulation") VALUES (185,29,'Women’s Advocacy and Networking Events','The number of networking or advocacy events organized for women to address structural inequalities.','events','participant demographics, advocacy focus','Quarterly review of event reports and participant records.','Strengthening advocacy efforts enhances women’s participation in decision-making and policy influence.','4','','No','Output',101,'Number of advocacy or networking events organized for women addressing structural inequalities.');
 INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit","indicator_formulation") VALUES (186,29,'Adapted Measures for Women Entrepreneurs','The number of tailored support measures implemented for women entrepreneurs in refugee and host communities.','measures','sector, business size','Evaluation of documentation on implemented measures.','Supporting women entrepreneurs fosters economic resilience and job creation in marginalized regions.','4','','No','Output',101,'Number of tailored support measures implemented for women entrepreneurs in refugee and host communities.');
 INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit","indicator_formulation") VALUES (187,29,'Inclusion in Vocational Training Guidelines','The number of national vocational training guidelines that integrate gender, inclusion, and environmental standards.','guidelines','policy area, training sector','Review of approved TVETA guidelines.','Institutionalizing inclusion and sustainability in vocational training policies ensures long-term equity and relevance.','4','','No','Output',101,'Number of vocational training guidelines integrating gender, inclusion, and environmental standards.');
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit","indicator_formulation") VALUES (188,30,'Graduates demonstrating skill application','This indicator measures the number of graduates from the digital training offer who have demonstrated the application of acquired skills through a concrete example.','Number of graduates','Gender, training title, time since graduation','Standardized online survey (via atingi) conducted [1/3/6 months] after completion of training.','Graduates who demonstrate the practical application of acquired skills are more likely to improve employability and career outcomes.','4','Semi-annual analysis of ongoing responses to the online survey.','No','Outcome',119,'Number of graduates from the digital training offer who have demonstrated the application of acquired skills through a concrete example.');
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit","indicator_formulation") VALUES (189,30,'Number of graduates demonstrating competency application','Number of graduates of the digital training offer who have demonstrated through a concrete example that they have applied the acquired competencies.','Number of graduates','Gender','Evaluation of standardized online survey (via atingi) of graduates 1/3/6 months after training completion','Digital training offers are made available to the target group. Accompanying measures such as targeted marketing and learner support increase enrollment and course completion rates.','8.6','Baseline: 0 graduates (2024). Target: 140 graduates (including 60 women) (2027).','Yes','Outcome',119,'Number of graduates of the digital training offer who have demonstrated competency application through a concrete example.');
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit","indicator_formulation") VALUES (190,30,'Number of certified training participants','Number of participants who completed the digital training offer with certification based on a knowledge test.','Number of participants','Gender','Final knowledge test and course statistics in atingi','Completion of training courses leads to a measurable increase in knowledge, proven by a knowledge test.','8.6','Baseline: 0 (2024). Target: 200 (including 80 women) (2027).','Yes','Output',119,'Number of participants who completed the digital training offer with test-based certification.');
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit","indicator_formulation") VALUES (191,30,'Proportion of graduates reporting knowledge increase','Proportion of graduates who reported their knowledge increased by 2+ points on a 5-point scale.','Percentage','Gender','Final questionnaire in atingi','Completion of training courses leads to a measurable increase in knowledge, proven by self-assessment.','8.6','Baseline: 0% (2024). Target: 40% (including 40% women) (2027).','Yes','Output',119,'Proportion of graduates who reported a knowledge increase by 2+ points on a 5-point scale.');
+INSERT INTO "indicators" ("indicator_id","theme_id","name","definition","unit_of_measurement","disaggregation","data_collection_method","underlying_theory_of_change","sdg_id","additional_info","is_standard","indicator_level","responsible_unit","indicator_formulation") VALUES (192,30,'Proportion of graduates rating knowledge usefulness','Proportion of graduates who rated the usefulness of the knowledge for achieving the module objective with 4 or 5 points on a 5-point scale.','Percentage','Gender','Final questionnaire in atingi evaluating usefulness','If the training courses are designed to be application-oriented and perceived as useful, the knowledge gain contributes to achieving the intended purpose.','8.6','Baseline: 0% (2024). Target: 40% (including 40% women) (2027).','Yes','Output',119,'Proportion of graduates who rated the usefulness of knowledge with 4 or 5 points on a 5-point scale.');
 COMMIT;
